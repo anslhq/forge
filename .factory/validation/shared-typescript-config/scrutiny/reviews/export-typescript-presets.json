@@ -1,0 +1,26 @@
+{
+  "featureId": "export-typescript-presets",
+  "reviewedAt": "2026-03-07T09:46:05Z",
+  "commitId": "e2596307fbcb69f3dd0854138fa63d1315008db9",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Implementation satisfies VAL-TSCFG-002: the shared TypeScript config package now exports explicit preset entrypoints (`./base.json`, `./library.json`, `./nextjs.json`), each exported file exists with concrete TS config content, and representative consumers were rewired to extend those exported paths.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "Mission feature metadata still assigns `tooling-migration-worker`, but that skill is not present in the current repo skill registry.",
+      "evidence": "`/Users/harsha/.factory/missions/3af10550-d17c-4797-bfea-7bb1a45d8f18/features.json` lists `skillName: tooling-migration-worker` for this feature; reading `/Users/harsha/Developer/mailshieldai/platform/.factory/skills/tooling-migration-worker/SKILL.md` returns ENOENT."
+    },
+    {
+      "area": "services",
+      "observation": "Repo-local `.factory/services.yaml` expected by mission workflows is currently missing, which can cause startup/procedure drift in later worker runs.",
+      "evidence": "Reading `/Users/harsha/Developer/mailshieldai/platform/.factory/services.yaml` returns ENOENT, and `/Users/harsha/Developer/mailshieldai/platform/.factory` currently contains only `init.sh`, `library/`, `skills/`, and `validation/`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass: exported TypeScript presets were implemented correctly for `@platform/typescript-config` and consumer extends were rewired as required by VAL-TSCFG-002. No blocking or non-blocking code defects were found in the feature commit."
+}

@@ -1,11 +1,11 @@
-import { Progress } from "@repo/design-system/components/ui/progress";
+import { Progress } from "@platform/design-system/components/ui/progress";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Displays an indicator showing the completion progress of a task, typically
  * displayed as a progress bar.
  */
-const meta = {
+const meta: Meta<typeof Progress> = {
   title: "ui/Progress",
   component: Progress,
   tags: ["autodocs"],
@@ -14,7 +14,7 @@ const meta = {
     value: 30,
     max: 100,
   },
-} satisfies Meta<typeof Progress>;
+};
 
 export default meta;
 

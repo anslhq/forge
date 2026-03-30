@@ -1,11 +1,9 @@
-import { legal } from "@repo/cms";
-import { Status } from "@repo/observability/status";
+import { Status } from "@platform/observability/status";
 import Link from "next/link";
 import { env } from "@/env";
+import { legalPages } from "../content";
 
-export const Footer = async () => {
-  const legalPages = await legal.getPostsMeta();
-
+export const Footer = () => {
   const navigationItems = [
     {
       title: "Home",
@@ -25,9 +23,9 @@ export const Footer = async () => {
     {
       title: "Legal",
       description: "We stay on top of the latest legal requirements.",
-      items: legalPages.map((post) => ({
-        title: post._title,
-        href: `/legal/${post._slug}`,
+      items: legalPages.map((page) => ({
+        title: page.title,
+        href: `/legal/${page.slug}`,
       })),
     },
   ];

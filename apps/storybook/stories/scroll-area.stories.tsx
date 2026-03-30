@@ -1,10 +1,10 @@
-import { ScrollArea } from "@repo/design-system/components/ui/scroll-area";
+import { ScrollArea } from "@platform/design-system/components/ui/scroll-area";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Augments native scroll functionality for custom, cross-browser styling.
  */
-const meta = {
+const meta: Meta<typeof ScrollArea> = {
   title: "ui/ScrollArea",
   component: ScrollArea,
   tags: ["autodocs"],
@@ -22,7 +22,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof ScrollArea>;
+};
 
 export default meta;
 

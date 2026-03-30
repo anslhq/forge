@@ -2,14 +2,14 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-} from "@repo/design-system/components/ui/alert";
+} from "@platform/design-system/components/ui/alert";
 import type { Meta, StoryObj } from "@storybook/react";
 import { AlertCircle } from "lucide-react";
 
 /**
  * Displays a callout for user attention.
  */
-const meta = {
+const meta: Meta<typeof Alert> = {
   title: "ui/Alert",
   component: Alert,
   tags: ["autodocs"],
@@ -30,7 +30,7 @@ const meta = {
       </AlertDescription>
     </Alert>
   ),
-} satisfies Meta<typeof Alert>;
+};
 
 export default meta;
 

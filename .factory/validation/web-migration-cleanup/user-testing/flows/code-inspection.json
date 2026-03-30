@@ -1,0 +1,283 @@
+{
+  "groupId": "code-inspection",
+  "testedAt": "2026-03-08T03:00:00.000Z",
+  "credentials": {
+    "account": "code-inspector",
+    "namespace": "code-inspection"
+  },
+  "toolsUsed": ["Read", "Grep", "Glob", "LS"],
+  "assertions": [
+    {
+      "id": "VAL-SUI-004",
+      "title": "Runtime-specific adapters remain out of the shared package",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Grep packages/ui/src for 'from \"next' (fixed-string)",
+          "expected": "No matches — no Next.js imports in shared package",
+          "observed": "No matches found"
+        },
+        {
+          "action": "Grep packages/ui/src for 'from \"convex' (fixed-string)",
+          "expected": "No matches — no Convex imports in shared package",
+          "observed": "No matches found"
+        },
+        {
+          "action": "Grep packages/ui/src for 'from \"next-themes' (fixed-string)",
+          "expected": "No matches — no next-themes imports in shared package",
+          "observed": "No matches found"
+        },
+        {
+          "action": "Grep packages/ui/src for 'from \"sonner' (fixed-string)",
+          "expected": "No matches — no sonner imports in shared package",
+          "observed": "No matches found"
+        },
+        {
+          "action": "Grep packages/ui/src for 'from \"@platform/env' (fixed-string)",
+          "expected": "No matches — no env imports in shared package",
+          "observed": "No matches found"
+        },
+        {
+          "action": "Read packages/ui/package.json dependencies",
+          "expected": "No runtime-bound deps (next, next-themes, convex, sonner, @platform/env)",
+          "observed": "Dependencies are: @base-ui/react, class-variance-authority, clsx, lucide-react, react, shadcn, tailwind-merge, tailwindcss, tw-animate-css. No forbidden runtime deps found."
+        },
+        {
+          "action": "Read apps/web/src/components/* boundary files",
+          "expected": "Runtime-bound code (next, next-themes, convex, sonner, @platform/env) stays in apps/web",
+          "observed": "header.tsx imports next/link; providers.tsx imports convex/react, @platform/env/web, sonner; theme-provider.tsx imports next-themes; mode-toggle.tsx imports next-themes; ui/sonner.tsx imports sonner + next-themes. All runtime-bound code correctly stays in apps/web."
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection only)",
+        "network": "N/A",
+        "terminalOutput": [
+          "Grep packages/ui/src for next/convex/next-themes/sonner/@platform/env: 0 matches each",
+          "packages/ui/package.json deps: @base-ui/react, class-variance-authority, clsx, lucide-react, react, shadcn, tailwind-merge, tailwindcss, tw-animate-css",
+          "apps/web/src/components/ contains: header.tsx (next/link), providers.tsx (convex/react, @platform/env/web), theme-provider.tsx (next-themes), mode-toggle.tsx (next-themes), ui/sonner.tsx (sonner, next-themes)"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-WEB-001",
+      "title": "apps/web consumes shared UI through package imports",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Grep apps/web/src for '@platform/ui' imports (fixed-string)",
+          "expected": "Web app imports shared UI from @platform/ui",
+          "observed": "Found 2 import sites: mode-toggle.tsx imports Button from @platform/ui/components/button, and DropdownMenu* from @platform/ui/components/dropdown-menu"
+        },
+        {
+          "action": "Grep apps/web/src for '@/components/ui/' imports (fixed-string)",
+          "expected": "No imports of local @/components/ui/ for shared primitives",
+          "observed": "No matches found — no local ui primitive imports"
+        },
+        {
+          "action": "Grep apps/web/src for '@/lib/utils' imports (fixed-string)",
+          "expected": "No imports of local @/lib/utils for shared cn utility",
+          "observed": "No matches found — no local utils imports"
+        },
+        {
+          "action": "Read apps/web/package.json",
+          "expected": "@platform/ui listed as workspace dependency",
+          "observed": "\"@platform/ui\": \"workspace:*\" present in dependencies"
+        },
+        {
+          "action": "Read apps/web/components.json",
+          "expected": "shadcn aliases point to @platform/ui for shared concerns",
+          "observed": "aliases.ui = \"@platform/ui/components\", aliases.utils = \"@platform/ui/lib/utils\" — correctly pointing to shared package"
+        },
+        {
+          "action": "Read apps/web/src/app/layout.tsx",
+          "expected": "Layout uses shared styles",
+          "observed": "Layout imports ../index.css which contains '@import \"@platform/ui/styles.css\"' — shared style surface consumed"
+        },
+        {
+          "action": "Read apps/web/src/index.css",
+          "expected": "Imports shared styles from @platform/ui",
+          "observed": "Single line: @import \"@platform/ui/styles.css\" — all shared design tokens/styles sourced from packages/ui"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection only)",
+        "network": "N/A",
+        "terminalOutput": [
+          "Grep @platform/ui in apps/web/src: mode-toggle.tsx:4 (Button), mode-toggle.tsx:10 (DropdownMenu*)",
+          "Grep @/components/ui/ in apps/web/src: 0 matches",
+          "Grep @/lib/utils in apps/web/src: 0 matches",
+          "apps/web/package.json: \"@platform/ui\": \"workspace:*\"",
+          "apps/web/components.json aliases: ui → @platform/ui/components, utils → @platform/ui/lib/utils",
+          "apps/web/src/index.css: @import \"@platform/ui/styles.css\""
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-WEB-002",
+      "title": "Generic primitives and shared helpers are no longer duplicated in apps/web",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "LS apps/web/src/components/ui",
+          "expected": "No generic primitives (button, card, input, etc.) — only runtime adapters",
+          "observed": "Contains only: sonner.tsx — a runtime-bound toaster adapter that depends on next-themes. No generic primitives (button, card, input, dropdown-menu, label, checkbox, skeleton) remain."
+        },
+        {
+          "action": "Grep apps/web/src for '@/components/ui/' imports",
+          "expected": "No app-local primitive imports",
+          "observed": "No matches found"
+        },
+        {
+          "action": "LS apps/web/src/lib",
+          "expected": "No local utils.ts (cn utility moved to @platform/ui)",
+          "observed": "Empty directory — no local utils.ts file exists"
+        },
+        {
+          "action": "Grep apps/web/src for '@/lib/utils' imports",
+          "expected": "No imports of local utils",
+          "observed": "No matches found"
+        },
+        {
+          "action": "Verify shared primitives exist in packages/ui/src/components",
+          "expected": "All migrated primitives are in packages/ui",
+          "observed": "packages/ui/src/components contains: button.tsx, card.tsx, checkbox.tsx, dropdown-menu.tsx, input.tsx, label.tsx, skeleton.tsx — all generic primitives live in shared package"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection only)",
+        "network": "N/A",
+        "terminalOutput": [
+          "LS apps/web/src/components/ui: sonner.tsx only (runtime adapter)",
+          "LS apps/web/src/lib: empty directory",
+          "LS packages/ui/src/components: button.tsx, card.tsx, checkbox.tsx, dropdown-menu.tsx, input.tsx, label.tsx, skeleton.tsx",
+          "Grep @/components/ui/ in apps/web/src: 0 matches",
+          "Grep @/lib/utils in apps/web/src: 0 matches"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-WEB-005",
+      "title": "Remaining app-local components are truly app-specific or runtime-bound",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "LS apps/web/src/components",
+          "expected": "Only app-specific or runtime-bound components remain",
+          "observed": "Contains: header.tsx, loader.tsx, mode-toggle.tsx, providers.tsx, theme-provider.tsx, ui/ (with only sonner.tsx)"
+        },
+        {
+          "action": "Inspect header.tsx for runtime-specific imports",
+          "expected": "Uses next/link (runtime-bound routing)",
+          "observed": "Imports Link from 'next/link' — Next.js routing, app-specific composition"
+        },
+        {
+          "action": "Inspect providers.tsx for runtime-specific imports",
+          "expected": "Uses convex, @platform/env, next-themes, sonner — all runtime-bound",
+          "observed": "Imports: @platform/env/web (env), convex/react (ConvexProvider), ./theme-provider, ./ui/sonner — all runtime-bound"
+        },
+        {
+          "action": "Inspect theme-provider.tsx for runtime-specific imports",
+          "expected": "Uses next-themes — runtime-bound",
+          "observed": "Imports ThemeProvider from 'next-themes' — runtime glue, app-specific"
+        },
+        {
+          "action": "Inspect mode-toggle.tsx for runtime-specific imports",
+          "expected": "Uses next-themes + shared UI components — app composition with runtime binding",
+          "observed": "Imports useTheme from 'next-themes' (runtime-bound), Button and DropdownMenu from @platform/ui — composition layer using shared primitives with runtime theme hook"
+        },
+        {
+          "action": "Inspect loader.tsx",
+          "expected": "Simple loading component — app-specific composition",
+          "observed": "Uses lucide-react Loader2 icon with Tailwind animation — trivial app-specific loading UI, no shared/generic primitive"
+        },
+        {
+          "action": "Inspect ui/sonner.tsx for runtime-specific imports",
+          "expected": "Uses next-themes + sonner — runtime-bound toaster adapter",
+          "observed": "Imports useTheme from 'next-themes' and Toaster from 'sonner' — runtime-bound toaster adapter that integrates theme state"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection only)",
+        "network": "N/A",
+        "terminalOutput": [
+          "LS apps/web/src/components: header.tsx, loader.tsx, mode-toggle.tsx, providers.tsx, theme-provider.tsx, ui/",
+          "LS apps/web/src/components/ui: sonner.tsx only",
+          "header.tsx: imports next/link (runtime routing)",
+          "providers.tsx: imports convex/react, @platform/env/web, sonner (all runtime-bound)",
+          "theme-provider.tsx: imports next-themes (runtime glue)",
+          "mode-toggle.tsx: imports next-themes (runtime) + @platform/ui components (shared)",
+          "loader.tsx: lucide-react icon (app-specific composition)",
+          "ui/sonner.tsx: imports next-themes + sonner (runtime-bound toaster)"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-001",
+      "title": "The same shared primitive is single-sourced across Storybook and web",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read packages/ui/package.json exports",
+          "expected": "Shared primitives exported via ./components/* pattern",
+          "observed": "exports include: \"./components/*\": \"./src/components/*.tsx\" — all primitives accessible as @platform/ui/components/<name>"
+        },
+        {
+          "action": "Grep apps/storybook for @platform/ui imports",
+          "expected": "Storybook stories import from @platform/ui/components/*",
+          "observed": "button.stories.tsx imports Button from @platform/ui/components/button; card.stories.tsx imports Button + Card* from @platform/ui/components/card; checkbox.stories.tsx imports from @platform/ui/components/checkbox + label; input.stories.tsx imports from @platform/ui/components/input + label"
+        },
+        {
+          "action": "Read apps/storybook/stories/button.stories.tsx",
+          "expected": "Story imports Button from @platform/ui",
+          "observed": "import { Button } from '@platform/ui/components/button' at line 4"
+        },
+        {
+          "action": "Read apps/web/src/components/mode-toggle.tsx (web consumer of same Button)",
+          "expected": "Web app imports same Button from @platform/ui",
+          "observed": "import { Button } from '@platform/ui/components/button' at line 4 — identical import path as Storybook"
+        },
+        {
+          "action": "Grep apps/web/src for local button implementation",
+          "expected": "No local button.tsx in apps/web",
+          "observed": "LS apps/web/src/components/ui contains only sonner.tsx — no duplicate button, card, input, etc."
+        },
+        {
+          "action": "Read apps/storybook/package.json",
+          "expected": "@platform/ui listed as dependency",
+          "observed": "\"@platform/ui\": \"workspace:*\" in dependencies"
+        },
+        {
+          "action": "Read apps/web/package.json",
+          "expected": "@platform/ui listed as dependency",
+          "observed": "\"@platform/ui\": \"workspace:*\" in dependencies"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "N/A (code inspection only)",
+        "network": "N/A",
+        "terminalOutput": [
+          "packages/ui/package.json exports: { \"./components/*\": \"./src/components/*.tsx\" }",
+          "apps/storybook/stories/button.stories.tsx:4: import { Button } from \"@platform/ui/components/button\"",
+          "apps/web/src/components/mode-toggle.tsx:4: import { Button } from \"@platform/ui/components/button\"",
+          "Both use identical import path — single-sourced from packages/ui",
+          "apps/storybook/package.json: \"@platform/ui\": \"workspace:*\"",
+          "apps/web/package.json: \"@platform/ui\": \"workspace:*\"",
+          "No duplicate button/card/input/etc in apps/web/src/components/ui (only sonner.tsx)"
+        ]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 5 assertions: all 5 passed. VAL-SUI-004: packages/ui contains zero runtime-specific imports (no next, convex, next-themes, sonner, @platform/env). VAL-WEB-001: apps/web correctly imports shared UI from @platform/ui, with shadcn aliases and styles pointing to the shared package. VAL-WEB-002: No generic primitives or shared helpers remain duplicated in apps/web (ui/ folder contains only runtime-bound sonner.tsx, lib/ is empty). VAL-WEB-005: All remaining local components (header, providers, theme-provider, mode-toggle, loader, sonner) are runtime-bound or app-specific. VAL-CROSS-001: Button (and other primitives) are single-sourced from @platform/ui and consumed identically by both Storybook stories and the web app."
+}

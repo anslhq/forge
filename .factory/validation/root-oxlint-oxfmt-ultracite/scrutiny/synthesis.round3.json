@@ -1,0 +1,52 @@
+{
+  "milestone": "root-oxlint-oxfmt-ultracite",
+  "round": 3,
+  "status": "fail",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "N/A (no dedicated test command defined in .factory/services.yaml mission validation)",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run check-types",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "bun run check",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "failedFeatures": ["remediate-root-oxlint-scope-overreach"]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "remediate-root-oxlint-scope-overreach",
+      "severity": "blocking",
+      "description": "Remediation did not fully close the mission/orchestration metadata scope-overreach blocker; `.factory/*` artifacts introduced by `d79c6dd` remain in the effective migrated state and were not removed/reverted by `a439ea7`."
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Clarify whether committed `.factory/*` artifacts are considered mission/orchestration metadata that must be removed when a scope-overreach fix is requested.",
+      "evidence": "The remediation removed other out-of-scope files but left `.factory/*` unchanged, and reviewer evidence shows that this ambiguity blocked closure.",
+      "isSystemic": true
+    },
+    {
+      "target": "library",
+      "suggestion": "Update `.factory/library/repo-structure.md` to reflect the completed rename from `packages/config` to `packages/typescript-config`.",
+      "evidence": "Reviewer found stale structure guidance that can mislead future tooling-migration workers.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": ".factory/validation/root-oxlint-oxfmt-ultracite/scrutiny/synthesis.round2.json"
+}

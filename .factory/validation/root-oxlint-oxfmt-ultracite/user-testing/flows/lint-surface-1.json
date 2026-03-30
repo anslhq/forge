@@ -1,0 +1,73 @@
+{
+  "groupId": "lint-surface-1",
+  "surface": "cli-command-surface",
+  "namespace": "root-oxlint-validate-1",
+  "assertionsTested": [
+    {
+      "id": "VAL-LINT-001",
+      "status": "pass",
+      "evidence": {
+        "files": [
+          "/Users/harsha/Developer/mailshieldai/platform/.oxlintrc.json",
+          "/Users/harsha/Developer/mailshieldai/platform/.oxfmtrc.jsonc"
+        ],
+        "observations": [
+          ".oxlintrc.json exists and extends ultracite oxlint configs",
+          ".oxfmtrc.jsonc exists and defines oxfmt schema/options",
+          "No biome.json/biome.jsonc found in repository via targeted file search"
+        ]
+      }
+    },
+    {
+      "id": "VAL-LINT-002",
+      "status": "pass",
+      "evidence": {
+        "files": [
+          "/Users/harsha/Developer/mailshieldai/platform/package.json",
+          "/Users/harsha/Developer/mailshieldai/platform/bun.lock"
+        ],
+        "observations": [
+          "package.json devDependencies include oxfmt, oxlint, oxlint-tsgolint, ultracite",
+          "package.json has no @biomejs/biome dependency",
+          "bun.lock contains oxfmt/oxlint/oxlint-tsgolint/ultracite entries and no @biomejs/biome entry"
+        ]
+      }
+    },
+    {
+      "id": "VAL-LINT-003",
+      "status": "pass",
+      "evidence": {
+        "commands": ["bun run check", "bun run fix --help"],
+        "outputs": [
+          "bun run check -> ultracite check --disable-nested-config; exit code 0; Found 0 warnings and 0 errors",
+          "bun run fix --help -> ultracite fix --disable-nested-config --help; usage printed; exit code 0"
+        ],
+        "observations": [
+          "package.json scripts expose stable check/fix command surface through ultracite",
+          "No Biome startup/config errors in command output"
+        ]
+      }
+    },
+    {
+      "id": "VAL-LINT-004",
+      "status": "pass",
+      "evidence": {
+        "files": [
+          "/Users/harsha/Developer/mailshieldai/platform/package.json",
+          "/Users/harsha/Developer/mailshieldai/platform/.oxlintrc.json",
+          "/Users/harsha/Developer/mailshieldai/platform/.oxfmtrc.jsonc"
+        ],
+        "searches": [
+          "No @biomejs/biome in package.json",
+          "No biome references in .oxlintrc.json or .oxfmtrc.jsonc",
+          "No biome.json/biome.jsonc files found"
+        ],
+        "commands": ["bun run check (exit 0, no Biome errors)"]
+      }
+    }
+  ],
+  "toolsUsed": ["Read", "LS", "Grep", "Execute", "ApplyPatch"],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Validated 4 assertions (VAL-LINT-001..004) on the CLI/config surface: all passed with command evidence and root config/dependency inspection showing OxLint/Oxfmt/Ultracite active and no active Biome authority/dependency in root validation path."
+}

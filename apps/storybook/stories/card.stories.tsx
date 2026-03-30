@@ -5,7 +5,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@repo/design-system/components/ui/card";
+} from "@platform/design-system/components/ui/card";
 import type { Meta, StoryObj } from "@storybook/react";
 import { BellRing } from "lucide-react";
 
@@ -27,7 +27,7 @@ const notifications = [
 /**
  * Displays a card with header, content, and footer.
  */
-const meta = {
+const meta: Meta<typeof Card> = {
   title: "ui/Card",
   component: Card,
   tags: ["autodocs"],
@@ -62,7 +62,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Card>;
+};
 
 export default meta;
 

@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/design-system/components/ui/table";
+} from "@platform/design-system/components/ui/table";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const invoices = [
@@ -39,7 +39,7 @@ const invoices = [
 /**
  * Powerful table and datagrids built using TanStack Table.
  */
-const meta = {
+const meta: Meta<typeof Table> = {
   title: "ui/Table",
   component: Table,
   tags: ["autodocs"],
@@ -67,7 +67,7 @@ const meta = {
       </TableBody>
     </Table>
   ),
-} satisfies Meta<typeof Table>;
+};
 
 export default meta;
 

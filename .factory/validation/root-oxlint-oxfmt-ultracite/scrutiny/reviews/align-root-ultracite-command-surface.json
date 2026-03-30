@@ -1,0 +1,26 @@
+{
+  "featureId": "align-root-ultracite-command-surface",
+  "reviewedAt": "2026-03-07T07:54:06Z",
+  "commitId": "d79c6ddabf0550c0c83ac553dc0ccaf8b7782e17",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Feature acceptance is satisfied: root `check`/`fix` command surface remains Ultracite-based after Ox migration, and worker evidence shows successful non-destructive command-path validation (`bun run check`, `bun run fix --help`) without Biome startup/config failures.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "Mission startup procedure has a known friction point: workers are instructed to run init but `.factory/init.sh` is committed non-executable, causing direct invocation failure and forcing a shell fallback.",
+      "evidence": "Handoff skillFeedback records deviation at init step (`sh .factory/init.sh` used after permission denied); transcript skeleton includes direct execution failure (`Permission denied`); commit diff shows `.factory/init.sh` added with mode `100644` (not executable)."
+    },
+    {
+      "area": "knowledge",
+      "observation": "Mission library command-surface knowledge appears stale after migration and may mislead later workers.",
+      "evidence": "`.factory/library/repo-command-surface.md` still lists `packages/config` as current shared config package, while repo now uses `packages/typescript-config` and `@platform/typescript-config` (see root `package.json` and migrated package path)."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The reviewed feature is correctly validated against its scope: root command surface stability for `check`/`fix` through Ultracite is preserved and evidenced by worker transcript/handoff plus commit diff. No blocking implementation defects were found for this feature; noted shared-state gaps are documentation/procedure quality issues, not feature correctness failures."
+}

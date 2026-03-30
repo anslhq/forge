@@ -14,14 +14,14 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from "@repo/design-system/components/ui/menubar";
+} from "@platform/design-system/components/ui/menubar";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * A visually persistent menu common in desktop applications that provides
  * quick access to a consistent set of commands.
  */
-const meta = {
+const meta: Meta<typeof Menubar> = {
   title: "ui/Menubar",
   component: Menubar,
   tags: ["autodocs"],
@@ -47,7 +47,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Menubar>;
+};
 
 export default meta;
 

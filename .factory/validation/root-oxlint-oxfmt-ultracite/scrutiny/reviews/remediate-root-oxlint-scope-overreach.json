@@ -1,0 +1,33 @@
+{
+  "featureId": "remediate-root-oxlint-scope-overreach",
+  "reviewedAt": "2026-03-07T09:05:00Z",
+  "commitId": "a439ea7cbf399b11b3116f321594c46c2e5b2fc2",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "This remediation commit closes the prior unrelated app/package churn blocker by restoring those files to pre-`d79c6dd` content (for example, `apps/web/src/components/ui/dropdown-menu.tsx` no longer differs from `d79c6dd^`). However, it does not close the mission/orchestration-metadata blocker because the out-of-scope `.factory/*` files introduced in `d79c6dd` remain in the effective migrated state unchanged.",
+    "issues": [
+      {
+        "file": ".factory/services.yaml",
+        "line": 1,
+        "severity": "blocking",
+        "description": "The previous blocking scope-overreach finding about mission/orchestration metadata is still unresolved: `.factory/*` artifacts introduced by `d79c6dd` are still present in the effective state (`git diff --name-status d79c6dd^ a439ea7` still lists `.factory/init.sh`, `.factory/library/*`, `.factory/services.yaml`, and `.factory/skills/tooling-migration-worker/SKILL.md`). Commit `a439ea7` does not remove/revert those files; it only reverts other metadata/app/package churn and expands ignore patterns."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "Mission/shared-state guidance is ambiguous on whether committed `.factory/*` artifacts introduced during a feature are acceptable or must be reverted when a scope-overreach fix is requested.",
+      "evidence": "Feature expectation requires removing or isolating out-of-scope mission/orchestration metadata, but remediation targeted `.mcp.json`, `.vscode/settings.json`, `bts.jsonc`, and `opencode.json` while leaving `.factory/*` unchanged from `d79c6dd` to `a439ea7`."
+    },
+    {
+      "area": "knowledge",
+      "observation": "Shared library docs still contain stale package-location information that can mislead future tooling-migration workers.",
+      "evidence": "/Users/harsha/Developer/mailshieldai/platform/.factory/library/repo-structure.md still documents `packages/config` even though the mission already renamed it to `packages/typescript-config`."
+    }
+  ],
+  "addressesFailureFrom": "/Users/harsha/Developer/mailshieldai/platform/.factory/validation/root-oxlint-oxfmt-ultracite/scrutiny/reviews/scope-cleanup-root-oxlint-migration.json",
+  "summary": "Fail: the fix successfully removes the prior unrelated app/package source churn from the effective migration state, but it does not remediate the remaining blocking mission/orchestration metadata overreach because `.factory/*` artifacts from the original failed commit remain in scope."
+}

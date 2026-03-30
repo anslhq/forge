@@ -1,10 +1,10 @@
-import { Label } from "@repo/design-system/components/ui/label";
+import { Label } from "@platform/design-system/components/ui/label";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Renders an accessible label associated with controls.
  */
-const meta = {
+const meta: Meta<typeof Label> = {
   title: "ui/Label",
   component: Label,
   tags: ["autodocs"],
@@ -17,7 +17,7 @@ const meta = {
     children: "Your email address",
     htmlFor: "email",
   },
-} satisfies Meta<typeof Label>;
+};
 
 export default meta;
 

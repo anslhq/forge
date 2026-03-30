@@ -1,11 +1,10 @@
 import "./styles.css";
-import { AnalyticsProvider } from "@repo/analytics/provider";
-import { Toolbar as CMSToolbar } from "@repo/cms/components/toolbar";
-import { DesignSystemProvider } from "@repo/design-system";
-import { fonts } from "@repo/design-system/lib/fonts";
-import { cn } from "@repo/design-system/lib/utils";
-import { Toolbar } from "@repo/feature-flags/components/toolbar";
-import { getDictionary } from "@repo/internationalization";
+import { AnalyticsProvider } from "@platform/analytics/provider";
+import { DesignSystemProvider } from "@platform/design-system";
+import { fonts } from "@platform/design-system/lib/fonts";
+import { cn } from "@platform/design-system/lib/utils";
+import { Toolbar } from "@platform/feature-flags/components/toolbar";
+import { getDictionary } from "@platform/internationalization";
 import type { ReactNode } from "react";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
@@ -35,7 +34,6 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
             <Footer />
           </DesignSystemProvider>
           <Toolbar />
-          <CMSToolbar />
         </AnalyticsProvider>
       </body>
     </html>

@@ -1,0 +1,22 @@
+{
+  "name": "catalog",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "eventcatalog dev",
+    "build": "eventcatalog build",
+    "start": "eventcatalog start",
+    "preview": "eventcatalog preview",
+    "generate": "eventcatalog generate",
+    "lint": "eventcatalog-linter",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "^2.0.37",
+    "@eventcatalog/core": "3.26.6",
+    "@eventcatalog/linter": "1.0.17"
+  },
+  "devDependencies": {
+    "culori": "^4.0.2"
+  }
+}

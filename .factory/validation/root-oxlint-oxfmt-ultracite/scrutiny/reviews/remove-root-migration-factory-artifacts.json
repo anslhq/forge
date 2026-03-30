@@ -1,0 +1,26 @@
+{
+  "featureId": "remove-root-migration-factory-artifacts",
+  "reviewedAt": "2026-03-07T09:03:13Z",
+  "commitId": "a78b5b7",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The fix commit directly addresses the prior blocker by removing the exact `.factory/*` artifacts that scrutiny flagged as out-of-scope residue from the original root tooling migration, while leaving the root migration outputs intact in the effective range.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "Shared-state policy for mission-scoped `.factory/*` files remains implicit rather than explicit, which previously allowed remediation attempts to miss the exact blocker and target adjacent files instead.",
+      "evidence": "Prior failed remediation `a439ea7` changed 43 non-blocker files and still left `.factory/*` blocker paths in `git diff --name-status d79c6dd^ a439ea7`; this fix (`a78b5b7`) had to explicitly delete those seven `.factory/*` paths."
+    },
+    {
+      "area": "skills",
+      "observation": "Feature metadata still references `tooling-migration-worker`, but the skill file was removed as part of the fix; if additional tooling-migration follow-up features are created in this mission lineage, this can cause lookup friction.",
+      "evidence": "`features.json` for both `remediate-root-oxlint-scope-overreach` and `remove-root-migration-factory-artifacts` sets `skillName: tooling-migration-worker`, while `a78b5b7` deletes `.factory/skills/tooling-migration-worker/SKILL.md`."
+    }
+  ],
+  "addressesFailureFrom": "/Users/harsha/Developer/mailshieldai/platform/.factory/validation/root-oxlint-oxfmt-ultracite/scrutiny/reviews/remediate-root-oxlint-scope-overreach.json",
+  "summary": "Pass: reviewed the fix transcript skeleton plus both diffs (`a439ea7` and `a78b5b7`), and confirmed the fix adequately resolves the original failure by removing the exact out-of-scope `.factory/*` artifacts that remained unresolved in the prior remediation."
+}

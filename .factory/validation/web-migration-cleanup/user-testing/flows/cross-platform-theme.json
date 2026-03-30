@@ -1,0 +1,109 @@
+{
+  "groupId": "cross-platform-theme",
+  "testedAt": "2026-03-08T00:00:00.000Z",
+  "credentials": {
+    "account": "none-required",
+    "namespace": "cross-platform-theme"
+  },
+  "toolsUsed": ["agent-browser", "Read", "Grep"],
+  "assertions": [
+    {
+      "id": "VAL-CROSS-002",
+      "title": "Shared tokens/themes render consistently in Storybook and web",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read apps/storybook/.storybook/preview.ts",
+          "expected": "Storybook preview imports shared styles from @platform/ui/styles and configures theme toggle decorator",
+          "observed": "preview.ts imports '@platform/ui/styles', defines globalTypes.theme with light/dark toolbar items, and a decorator that toggles .dark class on document.documentElement"
+        },
+        {
+          "action": "Read packages/ui/src/styles/index.css",
+          "expected": "Shared token layer with :root (light) and .dark CSS custom properties using oklch",
+          "observed": "Contains full oklch token set: :root defines light tokens (--background: oklch(1 0 0), --foreground: oklch(0.145 0 0), etc.), .dark selector overrides all tokens for dark theme (--background: oklch(0.145 0 0), --foreground: oklch(0.985 0 0), etc.), plus @theme inline block mapping to Tailwind"
+        },
+        {
+          "action": "Read apps/web/src/index.css",
+          "expected": "Web app imports shared styles from @platform/ui",
+          "observed": "Single line: @import '@platform/ui/styles.css' — web app delegates entirely to the shared package for tokens"
+        },
+        {
+          "action": "Read packages/ui/package.json exports",
+          "expected": "Package exports ./styles and ./styles.css pointing to src/styles/index.css",
+          "observed": "exports includes './styles': './src/styles/index.css' and './styles.css': './src/styles/index.css'"
+        },
+        {
+          "action": "Navigate to Storybook at http://storybook.platform.localhost:1355",
+          "expected": "Storybook loads with light theme by default",
+          "observed": "Storybook loaded successfully with light theme, toolbar shows 'Light' label, white canvas background with dark text components"
+        },
+        {
+          "action": "Screenshot Storybook in light mode (Docs + Default story)",
+          "expected": "Light background, dark foreground text, readable button component",
+          "observed": "White background, dark text on Button component and docs table, light theme tokens applied correctly"
+        },
+        {
+          "action": "Switch Storybook to dark theme via toolbar toggle",
+          "expected": "Canvas background becomes dark, text becomes light",
+          "observed": "Clicked 'Dark' in toolbar dropdown. Canvas background changed to dark/black, 'Button' text became white. Toolbar now shows 'Dark' label"
+        },
+        {
+          "action": "Screenshot Storybook in dark mode (Default story)",
+          "expected": "Dark background, light foreground text",
+          "observed": "Black canvas background, white 'Button' text — dark tokens from shared styles applied correctly"
+        },
+        {
+          "action": "Navigate to web app at http://web.platform.localhost:1355",
+          "expected": "Web app loads in light mode with white background",
+          "observed": "Web app loaded with white background, dark ASCII art text, 'API Status' card with white background and border, 'Home' nav link and theme toggle icon in header"
+        },
+        {
+          "action": "Screenshot web app in light mode",
+          "expected": "Light theme: white background, dark text, light card surface",
+          "observed": "White background (--background: oklch(1 0 0)), dark foreground text, card with white surface and subtle border — matches shared token :root values"
+        },
+        {
+          "action": "Switch web app to dark mode via header theme toggle",
+          "expected": "Background becomes dark, text becomes light, card surface darkens",
+          "observed": "Clicked 'Toggle theme' button, selected 'Dark' from dropdown. Background changed to dark (--background: oklch(0.145 0 0)), text became light, card surface darkened with lighter border"
+        },
+        {
+          "action": "Screenshot web app in dark mode",
+          "expected": "Dark theme: dark background, light text, dark card surface",
+          "observed": "Dark background, white/light ASCII art text, darker card with 'API Status' text in light color — matches shared .dark token values"
+        },
+        {
+          "action": "Check Storybook console errors",
+          "expected": "No theme-related errors",
+          "observed": "No errors from Storybook page errors check (agent-browser errors returned empty)"
+        },
+        {
+          "action": "Check web app console errors",
+          "expected": "Only expected Convex placeholder errors",
+          "observed": "Convex WebSocket errors to 'wss://example-convex-url.invalid' (expected per task instructions — placeholder URL). Storybook MDX React hook errors from prior navigation (pre-existing Storybook docs addon issue, not theme-related). No theme-related errors."
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "storybook-light.png",
+          "storybook-light-story.png",
+          "storybook-dark.png",
+          "storybook-dark-story.png",
+          "web-light.png",
+          "web-dark.png"
+        ],
+        "consoleErrors": "Storybook: none (errors check clean). Web: Convex placeholder WebSocket errors (expected, wss://example-convex-url.invalid), Storybook MDX React hook errors from prior navigation (pre-existing, not theme-related). No theme-related console errors in either app.",
+        "terminalEvidence": {
+          "storybookPreview": "apps/storybook/.storybook/preview.ts imports @platform/ui/styles, defines theme toolbar (light/dark), decorator toggles .dark class on documentElement",
+          "sharedStyles": "packages/ui/src/styles/index.css contains canonical oklch tokens for :root (light) and .dark, with @theme inline Tailwind mapping and base layer styles",
+          "webBootstrap": "apps/web/src/index.css is a single @import '@platform/ui/styles.css' — fully delegates to shared package",
+          "packageExports": "packages/ui/package.json exports './styles' and './styles.css' both pointing to ./src/styles/index.css"
+        }
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 1 assertion (VAL-CROSS-002): PASS. Both Storybook and web app consume the same shared token/theme surface from packages/ui/src/styles/index.css. Storybook loads it via @platform/ui/styles import in preview.ts with a toolbar decorator toggling .dark class. Web app loads it via @import '@platform/ui/styles.css' in its index.css. Light/dark theme switching works consistently in both apps — light mode shows white backgrounds with dark text, dark mode shows dark backgrounds with light text, using the same oklch CSS custom properties. No theme-related console errors in either app."
+}

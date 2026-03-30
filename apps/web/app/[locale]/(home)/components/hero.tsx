@@ -1,16 +1,16 @@
-import { blog } from "@repo/cms";
-import { Button } from "@repo/design-system/components/ui/button";
-import type { Dictionary } from "@repo/internationalization";
+import { Button } from "@platform/design-system/components/ui/button";
+import type { Dictionary } from "@platform/internationalization";
 import { MoveRight, PhoneCall } from "lucide-react";
 import Link from "next/link";
 import { env } from "@/env";
+import { blogPosts } from "../../content";
 
 interface HeroProps {
   dictionary: Dictionary;
 }
 
-export const Hero = async ({ dictionary }: HeroProps) => {
-  const latestPost = await blog.getLatestPost();
+export const Hero = ({ dictionary }: HeroProps) => {
+  const latestPost = blogPosts[0];
 
   return (
     <div className="w-full">
@@ -19,7 +19,7 @@ export const Hero = async ({ dictionary }: HeroProps) => {
           {latestPost && (
             <div>
               <Button asChild className="gap-4" size="sm" variant="secondary">
-                <Link href={`/blog/${latestPost._slug}`}>
+                <Link href={`/blog/${latestPost.slug}`}>
                   {dictionary.web.home.hero.announcement}{" "}
                   <MoveRight className="h-4 w-4" />
                 </Link>

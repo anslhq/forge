@@ -265,7 +265,7 @@ $RECYCLE.BIN/
 .github/copilot-instructions.md
 
 # Database
-packages/database/generated
+packages/backend/convex/_generated
 
 # react.email
 .react-email
@@ -277,3 +277,6 @@ packages/database/generated
 .contentlayer
 .content-collections
 .source
+
+# EventCatalog build output
+.eventcatalog-core/

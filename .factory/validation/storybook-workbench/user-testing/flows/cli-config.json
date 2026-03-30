@@ -1,0 +1,33 @@
+{
+  "flowId": "cli-config",
+  "milestone": "storybook-workbench",
+  "assertions": {
+    "VAL-SB-001": {
+      "status": "pass",
+      "evidence": [
+        "apps/storybook/package.json exists with dedicated scripts: dev (storybook dev --no-open --port ${PORT:-4311}), build (storybook build -o dist), check-types (tsc --noEmit), check, fix",
+        "apps/storybook/.storybook/ directory contains main.ts and preview.ts config files",
+        "Root package.json declares workspaces: ['apps/*', 'packages/*'] — apps/storybook is included as a workspace",
+        "Root package.json has dedicated scripts: dev:storybook (turbo -F storybook dev), build:storybook (turbo -F storybook build), check-types:storybook (bun x tsc --noEmit -p apps/storybook/tsconfig.json)",
+        ".factory/services.yaml has a dedicated 'storybook' service entry with start (Portless-backed), stop, healthcheck (curl storybook.platform.localhost:1355), port 4311, depends_on [portless]",
+        "apps/storybook has its own tsconfig.json, vite.config.ts, stories/ directory, and scripts/ directory — fully self-contained workspace app"
+      ],
+      "reason": "Storybook exists as a first-class workspace app at apps/storybook with its own package.json scripts (dev, build, check-types), .storybook config (main.ts, preview.ts), dedicated root-level turbo filter scripts, and a committed service entry in .factory/services.yaml. It can be run and built independently via turbo -F storybook dev/build."
+    },
+    "VAL-CROSS-004": {
+      "status": "pass",
+      "evidence": [
+        "Root package.json exposes per-workspace typecheck scripts: check-types:ui (tsc --noEmit -p packages/ui/tsconfig.json), check-types:web (tsc --noEmit -p apps/web/tsconfig.json), check-types:storybook (tsc --noEmit -p apps/storybook/tsconfig.json)",
+        "turbo.json declares check-types task with dependsOn: ['^check-types'] — enabling turbo check-types to fan out across all workspaces",
+        ".factory/services.yaml typecheck command chains all three: bun run check-types && tsc --noEmit -p apps/web/tsconfig.json && tsc --noEmit -p packages/ui/tsconfig.json && tsc --noEmit -p apps/storybook/tsconfig.json",
+        ".factory/services.yaml exposes granular commands: typecheck:ui (bun run check-types:ui), typecheck:web (bun run check-types:web), typecheck:storybook (bun run check-types:storybook)",
+        "Each workspace (packages/ui, apps/web, apps/storybook) has its own check-types script in its package.json enabling independent validation",
+        "Root check-types runs turbo check-types which fans out to all workspaces via the turbo task graph"
+      ],
+      "reason": "Shared-package validation fans out to all consumers. The monorepo exposes explicit per-workspace typecheck commands (check-types:ui, check-types:web, check-types:storybook) in both root package.json and .factory/services.yaml. The turbo.json check-types task with ^check-types dependency ensures changes in packages/ui are validated against both apps/storybook and apps/web consumers. The services.yaml typecheck command explicitly chains all three workspaces."
+    }
+  },
+  "frictions": [],
+  "blockers": [],
+  "toolsUsed": ["Read", "LS", "Grep"]
+}

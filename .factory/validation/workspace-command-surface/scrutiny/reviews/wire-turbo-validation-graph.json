@@ -1,0 +1,26 @@
+{
+  "featureId": "wire-turbo-validation-graph",
+  "reviewedAt": "2026-03-07T09:30:37Z",
+  "commitId": "5b2754c",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature implementation is correctly scoped and updates Turbo task wiring to match the migrated command surface: `check` and `fix` tasks are declared, `check-types` remains wired, and stale `lint` wiring was removed. This aligns with the feature description and VAL-CMD-004/VAL-X assertions for coherent validation graph wiring.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The assigned feature skill (`tooling-migration-worker`) was not available during execution, causing a documented process deviation even though code output was acceptable.",
+      "evidence": "Handoff: /Users/harsha/.factory/missions/3af10550-d17c-4797-bfea-7bb1a45d8f18/handoffs/2026-03-07T09-24-56-625Z__wire-turbo-validation-graph__e8097008-a94b-4610-99bb-05afa27c97ba.json (discoveredIssues, skillFeedback.deviations); transcript skeleton entry at worker-transcripts.jsonl line 18 includes \"Error: Skill \\\"tooling-migration-worker\\\" not found\"."
+    },
+    {
+      "area": "services",
+      "observation": "Mission startup expectations referenced repo-local `.factory/services.yaml` and `.factory/init.sh`, but these files were absent in the checked-out repo, forcing startup-procedure deviation.",
+      "evidence": "Read failure for /Users/harsha/Developer/mailshieldai/platform/.factory/services.yaml (ENOENT) during review; handoff records this as a pre-existing issue and deviation in `skillFeedback` (same handoff file, lines containing `.factory/services.yaml` and `.factory/init.sh`)."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS: `turbo.json` changes in commit 5b2754c are correctly scoped to validation-graph wiring and satisfy the feature’s expected behavior. No blocking code defects were found in the implemented change."
+}

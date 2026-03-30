@@ -1,0 +1,28 @@
+{
+  "flowId": "cross-005",
+  "testedAt": "2026-03-08T14:45:00Z",
+  "assertions": {
+    "VAL-CROSS-005": {
+      "status": "pass",
+      "evidence": [
+        "terminal-output: root package.json confirms `dev` script runs `bash scripts/dev.sh`",
+        "terminal-output: scripts/dev.sh starts Portless proxy on :1355, then launches web and storybook via their start-portless.sh scripts, printing Portless-backed URLs (http://web.platform.localhost:1355, http://storybook.platform.localhost:1355)",
+        "terminal-output: .factory/services.yaml defines portless service on port 1355, web service (port 4310) and storybook service (port 4311) both depending on portless, with healthchecks against Portless URLs",
+        "terminal-output: /tmp/dev-sh-output.log shows startup announcing Portless URLs, proxy running, apps starting on dynamic child ports (4185, 4601), and readiness messages confirming 'web ready at http://web.platform.localhost:1355' and 'storybook ready at http://storybook.platform.localhost:1355'",
+        "http-verify: curl to http://web.platform.localhost:1355 returned HTTP 200 with full Next.js 16 HTML (Turbopack, Geist fonts, app layout with nav)",
+        "http-verify: curl to http://storybook.platform.localhost:1355 returned HTTP 200 with Storybook 9 HTML (title 'storybook - Storybook', Nunito Sans fonts)"
+      ],
+      "reason": "The root `bun run dev` command invokes scripts/dev.sh which starts the Portless proxy on port 1355 and launches both web and storybook apps behind Portless-backed URLs. The startup log confirms both surfaces are announced and ready at their Portless URLs. Both surfaces return HTTP 200 with correct content when accessed via their Portless URLs. Users do not need to use raw localhost 4000-series ports. Screenshots were blocked by Chrome extension permission denial, but HTTP verification confirms both surfaces are fully reachable at their Portless URLs."
+    }
+  },
+  "frictions": [
+    {
+      "description": "Chrome extension denied permission for screenshots (agent-browser returned 'Permission denied by user' on all screenshot attempts). HTTP curl verification was used as fallback evidence.",
+      "resolved": true,
+      "resolution": "Used curl HTTP requests to verify both surfaces return 200 with correct HTML content",
+      "affectedAssertions": ["VAL-CROSS-005"]
+    }
+  ],
+  "blockers": [],
+  "toolsUsed": ["agent-browser", "curl", "terminal"]
+}

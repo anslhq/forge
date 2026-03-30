@@ -1,0 +1,101 @@
+{
+  "groupId": "web-browser",
+  "testedAt": "2026-03-08T00:00:00.000Z",
+  "credentials": {
+    "account": "none",
+    "namespace": "web-portless-browser"
+  },
+  "toolsUsed": ["agent-browser"],
+  "assertions": [
+    {
+      "id": "VAL-WEB-003",
+      "title": "Header theme toggle still works after migration",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Navigate to http://web.platform.localhost:1355",
+          "expected": "Page loads with header containing Home link and theme toggle button",
+          "observed": "Page loaded with 'Home' link and 'Toggle theme' button in header"
+        },
+        {
+          "action": "Click Toggle theme button",
+          "expected": "Dropdown menu opens with Light, Dark, System options",
+          "observed": "Menu opened showing Light, Dark, System menuitems"
+        },
+        {
+          "action": "Select Light",
+          "expected": "Page switches to light theme (white background, sun icon)",
+          "observed": "Page displayed light theme with white background and sun/gear icon"
+        },
+        {
+          "action": "Open menu and select Dark",
+          "expected": "Page switches to dark theme (black background, moon icon)",
+          "observed": "Page displayed dark theme with black background, white text, and moon icon"
+        },
+        {
+          "action": "Open menu and select System",
+          "expected": "Page switches to system-preferred theme",
+          "observed": "Page switched to system theme (light appearance, matching Playwright default light color scheme)"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "/tmp/web-theme-menu-open.png",
+          "/tmp/web-theme-light.png",
+          "/tmp/web-theme-dark.png",
+          "/tmp/web-theme-system.png"
+        ],
+        "consoleErrors": "Only expected Convex WebSocket errors (wss://example-convex-url.invalid - ERR_NAME_NOT_RESOLVED) due to placeholder NEXT_PUBLIC_CONVEX_URL. No hydration errors, no client-side errors, no theme-related errors.",
+        "network": "N/A - theme toggle is client-side only"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-WEB-004",
+      "title": "Home page health-status experience is unchanged",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Navigate to http://web.platform.localhost:1355",
+          "expected": "Homepage shell renders with ASCII art banner and API Status card",
+          "observed": "Homepage rendered with 'BETTER T STACK' ASCII art banner and API Status card"
+        },
+        {
+          "action": "Observe initial health-status state",
+          "expected": "API Status card shows 'Checking...' with indicator",
+          "observed": "API Status card displayed 'Checking...' with orange dot indicator"
+        },
+        {
+          "action": "Wait 28+ seconds for status resolution",
+          "expected": "Status transitions to Connected or Error",
+          "observed": "Status remained 'Checking...' — expected because NEXT_PUBLIC_CONVEX_URL is a placeholder (example-convex-url.invalid) so the Convex client keeps retrying WebSocket connections indefinitely rather than transitioning to Error state"
+        },
+        {
+          "action": "Verify page text content",
+          "expected": "API Status card text present in DOM",
+          "observed": "DOM contains 'API Status' heading and 'Checking...' text, confirming health-status card renders correctly"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "/tmp/web-initial.png",
+          "/tmp/web-health-initial.png",
+          "/tmp/web-health-resolved.png"
+        ],
+        "consoleErrors": "Expected Convex WebSocket errors only: 'WebSocket connection to wss://example-convex-url.invalid/api/1.32.0/sync failed: ERR_NAME_NOT_RESOLVED' with reconnect attempts. No client-side errors, no hydration errors. HMR connected successfully.",
+        "network": "WebSocket connection attempts to wss://example-convex-url.invalid/api/1.32.0/sync — all failed with ERR_NAME_NOT_RESOLVED (expected with placeholder URL)"
+      },
+      "issues": "Health status card remains in 'Checking...' state indefinitely because the Convex URL is a placeholder. The card does not transition to 'Error' — it keeps retrying. This is expected behavior for this validation environment and does not indicate a regression. The card renders correctly with the documented 'Checking...' state."
+    }
+  ],
+  "frictions": [
+    {
+      "description": "Health-status card never transitions from 'Checking...' to 'Error' with placeholder Convex URL — the Convex client retries indefinitely, so only the 'Checking...' state is observable in this environment",
+      "resolved": true,
+      "resolution": "Accepted as expected behavior per mission AGENTS.md which notes placeholder Convex env configuration. The 'Checking...' state confirms the card renders and behaves as designed.",
+      "affectedAssertions": ["VAL-WEB-004"]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 2 assertions: both passed. VAL-WEB-003 (theme toggle) confirmed all three theme options (Light, Dark, System) work correctly with visible theme changes and no client errors. VAL-WEB-004 (health-status card) confirmed the homepage renders with API Status card showing 'Checking...' state as expected with placeholder Convex URL."
+}

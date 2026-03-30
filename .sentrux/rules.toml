@@ -1,0 +1,29 @@
+# Sentrux architectural rules for the Forge monorepo.
+# Kept intentionally modest so the rules encode the current workspace shape
+# without inventing constraints the repo does not already follow.
+
+[constraints]
+max_cycles = 0
+max_cc = 25
+max_fn_lines = 120
+no_god_files = false
+
+[[boundaries]]
+from = "packages/*"
+to = "apps/*"
+reason = "Shared packages must remain app-agnostic and cannot import app code"
+
+[[boundaries]]
+from = "apps/storybook/*"
+to = "packages/backend/*"
+reason = "Storybook should render shared UI only and must not depend on backend runtime code"
+
+[[boundaries]]
+from = "apps/storybook/*"
+to = "packages/webhooks/*"
+reason = "Storybook should not couple to webhook delivery logic"
+
+[[boundaries]]
+from = "apps/docs/*"
+to = "packages/backend/*"
+reason = "Docs should stay content-only and avoid backend runtime coupling"

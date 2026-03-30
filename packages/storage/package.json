@@ -1,5 +1,5 @@
 {
-  "name": "@repo/storage",
+  "name": "@platform/storage",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@platform/typescript-config": "workspace:*"
   }
 }

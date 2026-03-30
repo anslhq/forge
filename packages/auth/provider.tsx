@@ -5,6 +5,7 @@ import { dark } from "@clerk/themes";
 import type { Theme } from "@clerk/types";
 import { useTheme } from "next-themes";
 import type { ComponentProps } from "react";
+import { isClerkConfigured } from "./config";
 
 type AuthProviderProperties = ComponentProps<typeof ClerkProvider> & {
   privacyUrl?: string;
@@ -18,7 +19,13 @@ export const AuthProvider = ({
   helpUrl,
   ...properties
 }: AuthProviderProperties) => {
+  const clerkConfigured = isClerkConfigured();
   const { resolvedTheme } = useTheme();
+
+  if (!clerkConfigured) {
+    return properties.children;
+  }
+
   const isDark = resolvedTheme === "dark";
   const baseTheme = isDark ? dark : undefined;
 

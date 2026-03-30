@@ -1,5 +1,6 @@
-import { auth } from "@repo/auth/server";
-import { database } from "@repo/database";
+import { auth } from "@platform/auth/server";
+import { api } from "@platform/backend/convex/_generated/api";
+import { ConvexHttpClient } from "convex/browser";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
@@ -10,6 +11,11 @@ import { Header } from "./components/header";
 
 const title = "Acme Inc";
 const description = "My application.";
+
+interface PageRecord {
+  _id: string;
+  title: string;
+}
 
 const CollaborationProvider = dynamic(() =>
   import("./components/collaboration-provider").then(
@@ -22,8 +28,14 @@ export const metadata: Metadata = {
   description,
 };
 
+const convex = env.NEXT_PUBLIC_CONVEX_URL
+  ? new ConvexHttpClient(env.NEXT_PUBLIC_CONVEX_URL)
+  : null;
+
 const App = async () => {
-  const pages = await database.page.findMany();
+  const pages = convex
+    ? ((await convex.query(api.pages.list)) as PageRecord[])
+    : [];
   const { orgId } = await auth();
 
   if (!orgId) {
@@ -43,8 +55,8 @@ const App = async () => {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="grid auto-rows-min gap-4 md:grid-cols-3">
           {pages.map((page) => (
-            <div className="aspect-video rounded-xl bg-muted/50" key={page.id}>
-              {page.name}
+            <div className="aspect-video rounded-xl bg-muted/50" key={page._id}>
+              {page.title}
             </div>
           ))}
         </div>

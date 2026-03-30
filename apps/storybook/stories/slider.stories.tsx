@@ -1,10 +1,10 @@
-import { Slider } from "@repo/design-system/components/ui/slider";
+import { Slider } from "@platform/design-system/components/ui/slider";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * An input where the user selects a value from within a given range.
  */
-const meta = {
+const meta: Meta<typeof Slider> = {
   title: "ui/Slider",
   component: Slider,
   tags: ["autodocs"],
@@ -14,7 +14,7 @@ const meta = {
     max: 100,
     step: 1,
   },
-} satisfies Meta<typeof Slider>;
+};
 
 export default meta;
 

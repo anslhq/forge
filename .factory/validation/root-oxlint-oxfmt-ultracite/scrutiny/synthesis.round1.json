@@ -1,0 +1,68 @@
+{
+  "milestone": "root-oxlint-oxfmt-ultracite",
+  "round": 1,
+  "status": "fail",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "N/A (no dedicated test command defined in .factory/services.yaml mission validation)",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run check-types",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "bun run check",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "failedFeatures": ["replace-root-biome-with-oxlint-oxfmt-config"]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "replace-root-biome-with-oxlint-oxfmt-config",
+      "severity": "blocking",
+      "description": "Feature commit included mission/orchestration metadata files outside the contracted root lint/format migration scope."
+    },
+    {
+      "featureId": "replace-root-biome-with-oxlint-oxfmt-config",
+      "severity": "blocking",
+      "description": "Feature commit included broad unrelated app-source churn beyond the assigned root tooling migration boundary."
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "skill:mission-worker-base",
+      "suggestion": "Clarify baseline-validator behavior when known pre-existing failures are directly within the assigned feature scope, so workers can apply targeted remediation without ambiguous procedure deviations.",
+      "evidence": "Review of feature replace-root-biome-with-oxlint-oxfmt-config cited worker skillFeedback deviation around baseline validation handling.",
+      "isSystemic": false
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add/align mission setup guidance to ensure `.factory/init.sh` is executable when direct invocation is required by worker startup steps.",
+      "evidence": "Review of align-root-ultracite-command-surface reported repeated startup friction from `Permission denied` on direct `.factory/init.sh` execution.",
+      "isSystemic": true
+    },
+    {
+      "target": "library",
+      "suggestion": "Update stale command-surface knowledge that still references `packages/config`; current authoritative path is `packages/typescript-config` and package `@platform/typescript-config`.",
+      "evidence": "Both review reports flagged `.factory/library/repo-command-surface.md` as stale after migration.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Duplicate stale-library observation from multiple review reports",
+      "reason": "duplicate"
+    }
+  ],
+  "previousRound": null
+}

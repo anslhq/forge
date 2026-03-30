@@ -5,14 +5,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@repo/design-system/components/ui/command";
+} from "@platform/design-system/components/ui/command";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CommandSeparator } from "cmdk";
 
 /**
  * Fast, composable, unstyled command menu for React.
  */
-const meta = {
+const meta: Meta<typeof Command> = {
   title: "ui/Command",
   component: Command,
   tags: ["autodocs"],
@@ -42,7 +42,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Command>;
+};
 
 export default meta;
 

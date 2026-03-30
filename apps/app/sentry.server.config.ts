@@ -1,3 +1,3 @@
-import { initializeSentry } from "@repo/observability/server";
+import { initializeSentry } from "@platform/observability/server";
 
 initializeSentry();

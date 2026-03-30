@@ -1,0 +1,206 @@
+{
+  "groupId": "cli-command-surface-group-1",
+  "testedAt": "2026-03-07T09:35:35Z",
+  "credentials": {
+    "account": "cli-validator-1",
+    "namespace": "workspace-command-surface-cli-group-1"
+  },
+  "toolsUsed": ["Read", "LS", "Grep", "Execute"],
+  "assertions": [
+    {
+      "id": "VAL-CMD-001",
+      "title": "Root `check-types` is no longer a no-op",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run `bun run check-types` from repo root",
+          "expected": "Turbo executes at least one real workspace `check-types` task",
+          "observed": "Turbo executed `@platform/env:check-types` (`tsc --noEmit`) and completed successfully"
+        }
+      ],
+      "evidence": {
+        "terminalSnapshots": [
+          "`bun run check-types` -> `Running check-types in 4 packages` and `@platform/env:check-types: $ tsc --noEmit`",
+          "Exit code: 0"
+        ],
+        "network": "not-applicable",
+        "consoleErrors": "not-applicable"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CMD-002",
+      "title": "Relevant workspaces define real `check-types` scripts",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Audit workspace `package.json` scripts under `apps/*` and `packages/*`",
+          "expected": "Typechecking participants define real `check-types` scripts or are intentionally not part of check-types execution",
+          "observed": "`packages/env/package.json` defines `check-types: tsc --noEmit`; `bun run check-types` executes that script; `apps/web`, `packages/backend`, and `packages/typescript-config` have no `check-types` script and were not executed as `check-types` tasks"
+        }
+      ],
+      "evidence": {
+        "files": [
+          "packages/env/package.json (scripts.check-types)",
+          "apps/web/package.json",
+          "packages/backend/package.json",
+          "packages/typescript-config/package.json"
+        ],
+        "terminalSnapshots": [
+          "Turbo output shows the only executed check-types task: `@platform/env:check-types`"
+        ],
+        "network": "not-applicable",
+        "consoleErrors": "not-applicable"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CMD-003",
+      "title": "Relevant workspaces expose aligned `check` / `fix` scripts where intended",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect workspace scripts for `check` and `fix`",
+          "expected": "Workspace scripts align to root tooling model",
+          "observed": "`apps/web`, `packages/backend`, and `packages/env` define `check`/`fix` as `bun run --cwd ../.. check|fix`, matching root model"
+        }
+      ],
+      "evidence": {
+        "files": [
+          "apps/web/package.json (scripts.check, scripts.fix)",
+          "packages/backend/package.json (scripts.check, scripts.fix)",
+          "packages/env/package.json (scripts.check, scripts.fix)",
+          "package.json (root `check`/`fix` scripts)"
+        ],
+        "network": "not-applicable",
+        "consoleErrors": "not-applicable"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CMD-004",
+      "title": "Turbo task graph matches implemented validation flow",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect `turbo.json` tasks and root scripts",
+          "expected": "Turbo graph and root scripts reflect actual validation execution",
+          "observed": "`turbo.json` defines `check-types`, `check`, and `fix` tasks; root `package.json` maps `check-types` to `turbo check-types`; command execution confirmed real task run"
+        }
+      ],
+      "evidence": {
+        "files": ["turbo.json", "package.json"],
+        "terminalSnapshots": [
+          "`bun run check-types` succeeded with Turbo task execution"
+        ],
+        "network": "not-applicable",
+        "consoleErrors": "not-applicable"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TSCFG-004",
+      "title": "Shared config package supports successful repo typechecking",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run `bun run check-types` and inspect for shared-config resolution errors",
+          "expected": "Typecheck succeeds without `@platform/config` or preset resolution failures",
+          "observed": "Typecheck command exited 0 and showed no missing shared config or legacy package resolution errors"
+        }
+      ],
+      "evidence": {
+        "terminalSnapshots": [
+          "`bun run check-types` -> exit 0; no resolution errors in output"
+        ],
+        "search": "`@platform/config` not found in `**/{package.json,tsconfig*.json,turbo.json}`",
+        "network": "not-applicable",
+        "consoleErrors": "not-applicable"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-X-001",
+      "title": "Accepted validation gate passes end to end from repo root",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run `bun run check`",
+          "expected": "Command succeeds",
+          "observed": "Ultracite check completed with 0 warnings and 0 errors"
+        },
+        {
+          "action": "Run `bun run check-types`",
+          "expected": "Command succeeds",
+          "observed": "Turbo check-types completed successfully"
+        }
+      ],
+      "evidence": {
+        "terminalSnapshots": [
+          "`bun run check` -> exit 0",
+          "`bun run check-types` -> exit 0"
+        ],
+        "network": "not-applicable",
+        "consoleErrors": "not-applicable"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-X-002",
+      "title": "TypeScript config rename and tooling migration are mutually compatible",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run gate commands and search for stale validation-path references",
+          "expected": "Gate commands pass and no active stale references in validation path",
+          "observed": "Both gate commands exited 0; no matches for `@platform/config`, `@biomejs/biome`, `biome.json`, or `ultracite/biome` in inspected validation-path configs/manifests"
+        }
+      ],
+      "evidence": {
+        "terminalSnapshots": [
+          "`bun run check` -> exit 0",
+          "`bun run check-types` -> exit 0"
+        ],
+        "search": [
+          "No `@platform/config` in `**/{package.json,tsconfig*.json,turbo.json}`",
+          "No `@biomejs/biome|biome.json|ultracite/biome` in `**/{package.json,turbo.json,.oxlintrc.json,.oxfmtrc.jsonc,tsconfig*.json}`"
+        ],
+        "network": "not-applicable",
+        "consoleErrors": "not-applicable"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-X-003",
+      "title": "Final repo structure matches approved mission shape",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect root and packages structure plus required config files",
+          "expected": "`packages/typescript-config`, `.oxlintrc.json`, and `.oxfmtrc.jsonc` exist; no active legacy `packages/config` artifact",
+          "observed": "`packages/typescript-config` exists; root `.oxlintrc.json` and `.oxfmtrc.jsonc` exist; glob search found no `packages/config/**`"
+        }
+      ],
+      "evidence": {
+        "terminalSnapshots": [
+          "`LS packages` shows `backend`, `env`, `typescript-config`",
+          "`LS` root shows `.oxlintrc.json` and `.oxfmtrc.jsonc`"
+        ],
+        "search": "`packages/config/**` -> no matches",
+        "network": "not-applicable",
+        "consoleErrors": "not-applicable"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "`bun run check-types` output showed only one executed task due cache replay and script distribution, which obscures workspace-level intent at first glance.",
+      "resolved": true,
+      "resolution": "Correlated Turbo output with workspace `package.json` script audit to confirm intended command-surface participation.",
+      "affectedAssertions": ["VAL-CMD-001", "VAL-CMD-002", "VAL-CMD-004"]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 8 assertions: 8 passed, 0 failed, 0 blocked. Required root commands (`bun run check`, `bun run check-types`) both succeeded with evidence captured from command output and config/script inspection."
+}

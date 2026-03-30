@@ -1,10 +1,10 @@
-import { Badge } from "@repo/design-system/components/ui/badge";
+import { Badge } from "@platform/design-system/components/ui/badge";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Displays a badge or a component that looks like a badge.
  */
-const meta = {
+const meta: Meta<typeof Badge> = {
   title: "ui/Badge",
   component: Badge,
   tags: ["autodocs"],
@@ -19,7 +19,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Badge>;
+};
 
 export default meta;
 

@@ -1,0 +1,55 @@
+{
+  "featureId": "storybook-bootstrap-portless-and-validation-surface",
+  "reviewedAt": "2026-03-08T01:15:00.000Z",
+  "commitId": "b0a948a",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Solid bootstrap implementation. The worker created a well-structured `apps/storybook` workspace with correct Storybook 9 + react-vite configuration, proper consumption of `@platform/ui` through public exports (`@platform/ui/components/button` and `@platform/ui/styles`), Tailwind CSS v4 via the vite plugin, theme switching via a decorator, and autodocs via the `tags: ['autodocs']` pattern. The root package.json was updated with per-workspace validation scripts (`check-types:ui`, `check-types:web`, `check-types:storybook`, `dev:storybook`, `build:storybook`). The `.factory/services.yaml` was created with Portless-backed service definitions for both web and storybook. All expected behaviors from the feature spec are addressed. Two non-blocking observations noted below.",
+    "issues": [
+      {
+        "file": ".factory/services.yaml",
+        "line": 4,
+        "severity": "non_blocking",
+        "description": "The `typecheck` command in services.yaml hardcodes absolute paths (`/Users/harsha/Developer/anslhq/platform/...`). While functional for this user's machine, this makes the services.yaml non-portable. The per-workspace `typecheck:ui`, `typecheck:web`, `typecheck:storybook` commands correctly use relative paths via root scripts, so this is mainly an issue for the aggregate `typecheck` command."
+      },
+      {
+        "file": ".factory/services.yaml",
+        "line": 23,
+        "severity": "non_blocking",
+        "description": "The web service `start` command also hardcodes absolute paths to the `next` binary (`/Users/harsha/Developer/anslhq/platform/apps/web/node_modules/.bin/next`). Same portability concern. Similarly for the storybook service start command."
+      },
+      {
+        "file": "apps/storybook/.storybook/main.ts",
+        "line": 7,
+        "severity": "non_blocking",
+        "description": "The `docs: {}` config is an empty object. The worker noted in skillFeedback that Storybook 9 removed `autodocs: 'tag'` from docs options. This works because autodocs is now driven by the `tags: ['autodocs']` on individual stories. Correct behavior, but the empty object could be removed entirely for cleanliness — it has no effect."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "conventions",
+      "observation": "The worker hardcoded absolute paths in `.factory/services.yaml` for the aggregate typecheck command and service start commands. There is no documented convention in AGENTS.md about whether services.yaml should use absolute or relative paths. Since this file is machine-specific factory infrastructure, absolute paths may be intentional, but it's worth noting as a convention gap.",
+      "evidence": ".factory/services.yaml lines 4, 23, 30 contain /Users/harsha/Developer/anslhq/platform/... paths"
+    },
+    {
+      "area": "skills",
+      "observation": "Worker's skillFeedback suggested that the storybook-worker skill should mention Storybook 9's removal of `autodocs: 'tag'` from docs options. The current SKILL.md (as of b0a948a) does not mention this. The skill has since been updated (visible in current working tree) to include a note about `@storybook/addon-docs` for Storybook 9 — this was addressed by a later feature.",
+      "evidence": "Handoff skillFeedback.suggestedChanges: 'The storybook-worker skill could mention that Storybook 9 removed the autodocs: tag config from docs options, requiring an empty docs object instead.'"
+    },
+    {
+      "area": "knowledge",
+      "observation": "The worker created `.factory/library/architecture.md` and `.factory/library/portless.md` documenting workspace ownership rules and Portless conventions. These are well-structured and directly actionable for future workers. Good knowledge capture.",
+      "evidence": "Both files created in commit b0a948a with clear ownership boundaries and Portless usage notes."
+    },
+    {
+      "area": "services",
+      "observation": "The worker correctly created `.factory/services.yaml` from scratch with all required services (portless, web, storybook) and per-workspace validation commands. The storybook service definition was subsequently updated in later commits (bec5de1) to use a shell script wrapper for more robust Portless startup.",
+      "evidence": ".factory/services.yaml created in b0a948a, later modified in bec5de1"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "PASS. The bootstrap feature delivers all four expected behaviors: (1) `apps/storybook` exists as a workspace app with dev/build scripts and `.storybook` configuration using @storybook/react-vite v9; (2) `.factory/services.yaml` provides committed Portless-backed startup surfaces for both Storybook (port 4311) and web (port 4310); (3) per-workspace validation scripts (`check-types:ui`, `check-types:web`, `check-types:storybook`, `build:storybook`) are individually addressable from root; (4) Storybook startup/run instructions are encoded in services.yaml and root scripts rather than ad hoc knowledge. The implementation correctly uses public package exports, loads shared styles in preview, includes autodocs and theme switching, and all verification commands passed. Non-blocking issues are limited to hardcoded absolute paths in services.yaml and a no-op empty `docs: {}` config."
+}

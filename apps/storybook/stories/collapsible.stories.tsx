@@ -2,14 +2,14 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@repo/design-system/components/ui/collapsible";
+} from "@platform/design-system/components/ui/collapsible";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Info } from "lucide-react";
 
 /**
  * An interactive component which expands/collapses a panel.
  */
-const meta = {
+const meta: Meta<typeof Collapsible> = {
   title: "ui/Collapsible",
   component: Collapsible,
   tags: ["autodocs"],
@@ -33,7 +33,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Collapsible>;
+};
 
 export default meta;
 

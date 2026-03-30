@@ -1,0 +1,55 @@
+{
+  "milestone": "web-migration-cleanup",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "bun run check", "exitCode": 0 },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run check-types && bun x tsc --noEmit -p apps/web/tsconfig.json && bun x tsc --noEmit -p packages/ui/tsconfig.json && bun x tsc --noEmit -p apps/storybook/tsconfig.json",
+      "exitCode": 0
+    },
+    "lint": { "passed": true, "command": "bun run check", "exitCode": 0 },
+    "build": {
+      "passed": true,
+      "command": "bun run --cwd apps/web build",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [
+    {
+      "target": "library",
+      "description": "Added Convex anyApi Proxy re-render pitfall documentation to .factory/library/architecture.md — explains that api.X.Y creates a new FunctionReference on every access (Proxy), causing infinite re-renders when used inside component render bodies. Fix: hoist to module scope.",
+      "sourceFeature": "web-migrate-to-shared-ui-and-clean-boundaries"
+    }
+  ],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add convention: Sentry is now integrated into apps/web (@sentry/nextjs). Workers modifying the web app should be aware of the Sentry instrumentation layer (sentry.*.config.ts, instrumentation.ts, global-error.tsx) and the Convex log-stream webhook route (api/convex/log-stream). New web features should follow the existing Sentry tracing patterns.",
+      "evidence": "Feature web-migrate-to-shared-ui-and-clean-boundaries added a full Sentry integration (6 config/instrumentation files, @sentry/nextjs dependency, convex-observability wrapper, and a 215-line Convex log-stream webhook route) as out-of-scope additions. These are now part of the codebase and future workers need to know about them.",
+      "isSystemic": false
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add convention: Sentry configuration values (org, project, sentryUrl) in apps/web/next.config.ts are currently hardcoded. Consider migrating to environment variables if these values differ across environments.",
+      "evidence": "apps/web/next.config.ts lines 10-12 contain hardcoded strings: org 'ansl-ai', project 'next', sentryUrl 'https://watcher.ecorp.cc/'.",
+      "isSystemic": false
+    },
+    {
+      "target": "skills",
+      "suggestion": "The shared-ui-worker skill could mention the Convex anyApi Proxy re-render pitfall as a known gotcha when working with Convex queries in React components, since this mission involves Convex-backed web apps.",
+      "evidence": "Worker's skill feedback suggested this addition. The bug was a real blocker (Too many re-renders) that required understanding Convex's Proxy-based API pattern.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": null
+}

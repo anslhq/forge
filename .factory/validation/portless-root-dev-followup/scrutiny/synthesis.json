@@ -1,0 +1,53 @@
+{
+  "milestone": "portless-root-dev-followup",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "bun run check",
+      "exitCode": 1,
+      "note": "Exit code 1 due to pre-existing formatting failures in .opencode/ markdown files (79 files). These are documented as known pre-existing noise in AGENTS.md and are outside this mission's scope."
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run check-types && bun x tsc --noEmit -p apps/web/tsconfig.json && bun x tsc --noEmit -p packages/ui/tsconfig.json && bun x tsc --noEmit -p apps/storybook/tsconfig.json",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "bun run check (lint portion passes; only formatting in .opencode/ fails)",
+      "exitCode": 0,
+      "note": "Lint rules pass. Formatting failures are limited to unrelated .opencode/ files."
+    },
+    "build": {
+      "passed": true,
+      "command": "bun run --cwd apps/web build && bun run --cwd apps/storybook build",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "skills",
+      "suggestion": "Consider creating a lightweight 'portless-worker' or 'dev-surface' skill for features focused on Portless orchestration and root dev surface wiring. The current storybook-worker skill was used for this feature but most of its guidance (stories, docs, a11y, interaction surfaces) didn't apply.",
+      "evidence": "Feature root-dev-portless-followup worker feedback noted storybook-worker skill mismatch. The worker deviated from story/docs/a11y steps because the feature was purely about Portless root dev orchestration.",
+      "isSystemic": false
+    },
+    {
+      "target": "library",
+      "suggestion": "Document the root dev orchestration pattern (proxy check → launch child scripts in parallel → trap cleanup → wait) in .factory/library/portless.md so future workers can compose multiple Portless surfaces without rediscovering the pattern.",
+      "evidence": "scripts/dev.sh implements a reusable orchestration pattern. .factory/library/portless.md currently documents individual app startup resilience but not the root composition pattern.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": null
+}

@@ -1,0 +1,79 @@
+{
+  "groupId": "tsconfig-cli-surface",
+  "testedAt": "2026-03-07T09:52:41Z",
+  "credentials": {
+    "account": "validator-cli-1",
+    "namespace": "sts_cfg_ns_1"
+  },
+  "toolsUsed": ["Read", "LS", "Glob", "Grep", "Execute"],
+  "assertions": [
+    {
+      "id": "VAL-TSCFG-001",
+      "title": "Shared config package is renamed and exposed as @platform/typescript-config",
+      "status": "pass",
+      "reason": "The workspace exists at packages/typescript-config and its manifest name is @platform/typescript-config; no active @platform/config package manifest was found.",
+      "evidence": {
+        "files": ["packages/typescript-config/package.json", "packages/"],
+        "commands": [
+          "LS /Users/harsha/Developer/mailshieldai/platform/packages",
+          "LS /Users/harsha/Developer/mailshieldai/platform/packages/typescript-config",
+          "Grep '@platform/config' in **/package.json (no matches)"
+        ]
+      }
+    },
+    {
+      "id": "VAL-TSCFG-002",
+      "title": "Shared TypeScript presets are explicitly exported",
+      "status": "pass",
+      "reason": "The package exports explicit preset entrypoints (./base.json, ./library.json, ./nextjs.json), and each exported file exists with valid TypeScript config JSON content.",
+      "evidence": {
+        "files": [
+          "packages/typescript-config/package.json",
+          "packages/typescript-config/base.json",
+          "packages/typescript-config/library.json",
+          "packages/typescript-config/nextjs.json"
+        ],
+        "commands": [
+          "Glob /Users/harsha/Developer/mailshieldai/platform/packages/typescript-config '*.json|*.jsonc'"
+        ]
+      }
+    },
+    {
+      "id": "VAL-TSCFG-003",
+      "title": "Root and workspace consumers resolve the renamed package",
+      "status": "pass",
+      "reason": "Active tsconfig and package dependency references use @platform/typescript-config, and no active @platform/config references were found in package.json or tsconfig*.json files. Root check-types exits 0.",
+      "evidence": {
+        "files": [
+          "tsconfig.json",
+          "apps/web/tsconfig.json",
+          "packages/env/tsconfig.json",
+          "package.json",
+          "apps/web/package.json",
+          "packages/env/package.json",
+          "packages/backend/package.json"
+        ],
+        "commands": [
+          "Grep '@platform/typescript-config' in **/tsconfig*.json",
+          "Grep '@platform/typescript-config' in **/package.json",
+          "Grep '@platform/config' in **/package.json (no matches)",
+          "Grep '@platform/config' in **/tsconfig*.json (no matches)",
+          "bun run check-types (exit 0)"
+        ],
+        "commandOutput": {
+          "bun run check-types": "$ turbo check-types | Packages in scope: @platform/backend, @platform/env, @platform/typescript-config, web | Running check-types in 4 packages | Tasks: 1 successful, 1 total | Cached: 1 cached, 1 total | exit 0"
+        }
+      }
+    }
+  ],
+  "frictions": [
+    {
+      "description": "`bun run check-types` reported only one replayed cached task in output, which can appear sparse for multi-package validation.",
+      "resolved": true,
+      "resolution": "Correlated Turbo output with direct package/tsconfig manifest inspection to confirm the rename and consumer path migration.",
+      "affectedAssertions": ["VAL-TSCFG-003"]
+    }
+  ],
+  "blockers": [],
+  "summary": "Validated 3 assertions for shared TypeScript config: 3 passed, 0 failed, 0 blocked."
+}

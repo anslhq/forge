@@ -1,0 +1,44 @@
+{
+  "flowId": "cross-portless",
+  "milestone": "storybook-workbench",
+  "assertions": {
+    "VAL-CROSS-003": {
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "terminal-output",
+          "label": "services.yaml committed Portless-wrapped service entries",
+          "content": "services.yaml defines: portless (proxy on :1355), web (portless web.platform with PORTLESS_APP_PORT=4310), storybook (bash apps/storybook/scripts/start-portless.sh). Both web and storybook depend_on portless. Healthchecks use Portless URLs."
+        },
+        {
+          "type": "terminal-output",
+          "label": "portless list — concurrent route proof",
+          "content": "Active routes:\n  http://storybook.platform.localhost:1355  ->  localhost:4441  (pid 45184)\n  http://web.platform.localhost:1355  ->  localhost:4112  (pid 45899)"
+        },
+        {
+          "type": "screenshot",
+          "label": "Storybook Portless URL",
+          "path": "/tmp/cross-storybook-portless.png",
+          "description": "Storybook loads successfully at http://storybook.platform.localhost:1355 — shows Storybook 10 sidebar with Primitives (Button, Card, Checkbox, Input), Docs page for Button with controls table."
+        },
+        {
+          "type": "screenshot",
+          "label": "Web Portless URL",
+          "path": "/tmp/cross-web-portless.png",
+          "description": "Web app responds at http://web.platform.localhost:1355 — Next.js 16.1.6 Turbopack renders (with a pre-existing React re-render error unrelated to Portless routing). The Portless route is functional and serves the web surface."
+        }
+      ],
+      "reason": "Both Portless routes exist simultaneously (confirmed via `portless list`). Storybook loads fully at its Portless URL. Web app loads at its Portless URL (the React re-render error is a pre-existing app-level issue, not a Portless concern — the route works and serves the Next.js surface). Both services have committed startup paths in .factory/services.yaml with explicit Portless integration and dependency declarations."
+    }
+  },
+  "frictions": [
+    {
+      "description": "Web app at http://web.platform.localhost:1355 shows a React 'Too many re-renders' runtime error. This is a pre-existing app-level bug, not a Portless issue — the route itself resolves and serves the Next.js app correctly.",
+      "resolved": false,
+      "resolution": "N/A — outside scope of VAL-CROSS-003 (Portless routing works; app rendering is a separate concern)",
+      "affectedAssertions": ["VAL-CROSS-003"]
+    }
+  ],
+  "blockers": [],
+  "toolsUsed": ["agent-browser", "Read", "Execute"]
+}

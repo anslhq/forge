@@ -1,0 +1,61 @@
+{
+  "milestone": "workspace-command-surface",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "N/A (no \"test\" task is defined for this mission's accepted gate)",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run check-types",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "bun run check",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "skills",
+      "suggestion": "Restore or register the `tooling-migration-worker` skill referenced by mission features so assigned workers can follow the intended procedure without ad-hoc deviations.",
+      "evidence": "All three reviewed features in this milestone recorded missing-skill deviations and reviewers independently observed the skill absence.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Align worker startup guidance with the current repository state, or restore required `.factory/services.yaml` and `.factory/init.sh` mission files so startup instructions are executable as written.",
+      "evidence": "All three reviewed features observed startup expectations referencing missing repo-local `.factory/services.yaml` and `.factory/init.sh`.",
+      "isSystemic": true
+    },
+    {
+      "target": "library",
+      "suggestion": "Capture the Convex-generated type dependency constraint (backend/web typecheck exclusion rationale) in `.factory/library/` to prevent repeated rediscovery.",
+      "evidence": "The `add-workspace-check-types-scripts` review surfaced this as reusable factual knowledge, but it is not currently represented in `.factory/library/`.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Repeated reports that `tooling-migration-worker` was missing",
+      "reason": "duplicate"
+    },
+    {
+      "observation": "Repeated reports that `.factory/services.yaml` / `.factory/init.sh` were missing",
+      "reason": "duplicate"
+    }
+  ],
+  "previousRound": null
+}

@@ -1,0 +1,124 @@
+{
+  "flowId": "storybook-browser",
+  "milestone": "storybook-workbench",
+  "assertions": {
+    "VAL-SB-002": {
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "terminal-output",
+          "description": "Import scan in apps/storybook story files",
+          "content": "All story files import from @platform/ui package exports:\n- button.stories.tsx: import { Button } from '@platform/ui/components/button'\n- card.stories.tsx: import { Button } from '@platform/ui/components/button', import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@platform/ui/components/card'\n- checkbox.stories.tsx: import { Checkbox } from '@platform/ui/components/checkbox', import { Label } from '@platform/ui/components/label'\n- input.stories.tsx: import { Input } from '@platform/ui/components/input', import { Label } from '@platform/ui/components/label'\nNo app-local UI imports or deep package internals found."
+        },
+        {
+          "type": "screenshot",
+          "description": "Shared primitive (Button) story rendering in Storybook",
+          "path": "/tmp/sb-button-default-light.png"
+        },
+        {
+          "type": "terminal-output",
+          "description": "packages/ui/package.json exports field",
+          "content": "exports: { '.': './src/index.ts', './components/*': './src/components/*.tsx', './hooks': './src/hooks/index.ts', './lib/utils': './src/lib/utils.ts', './styles': './src/styles/index.css', './styles.css': './src/styles/index.css' }"
+        }
+      ],
+      "reason": "All 4 story files (button, card, checkbox, input) import shared UI components exclusively through @platform/ui public package exports (e.g., @platform/ui/components/button). No deep src/* imports or app-local UI file imports were found. The Button component renders correctly in Storybook."
+    },
+    "VAL-SB-003": {
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "terminal-output",
+          "description": "Read apps/storybook/.storybook/preview.ts",
+          "content": "preview.ts imports '@platform/ui/styles' at the top level, loading the shared global style/token layer. It configures theme globals (light/dark), a decorator that toggles 'dark' class on documentElement, and control matchers for color/date."
+        },
+        {
+          "type": "screenshot",
+          "description": "Shared primitive story (Button Default) in themed state (light mode)",
+          "path": "/tmp/sb-button-default-light.png"
+        },
+        {
+          "type": "terminal-output",
+          "description": "Console errors check",
+          "content": "No console errors found in browser."
+        }
+      ],
+      "reason": "preview.ts loads shared global styles via 'import @platform/ui/styles' and configures theme switching via a decorator. The Button story renders with correct styling in light mode, confirming the shared token contract is active. No console errors."
+    },
+    "VAL-SB-004": {
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "screenshot",
+          "description": "Light theme state - Button Default story",
+          "path": "/tmp/sb-button-default-light.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "Dark theme state - Button Default story",
+          "path": "/tmp/sb-button-default-dark.png"
+        },
+        {
+          "type": "terminal-output",
+          "description": "Root DOM class inspection before and after toggle",
+          "content": "Light mode: iframe documentElement.classList = '' (empty, no dark class)\nDark mode: iframe documentElement.classList = 'dark'\nThe preview decorator in preview.ts calls document.documentElement.classList.toggle('dark', theme === 'dark') inside the Storybook preview iframe. Toolbar button changes from 'Light' to 'Dark' label."
+        },
+        {
+          "type": "terminal-output",
+          "description": "Console errors check",
+          "content": "No console errors found after theme switching."
+        }
+      ],
+      "reason": "Storybook exposes a light/dark theme toggle in the toolbar (addon-themes). Clicking it toggles the 'dark' class on the preview iframe's documentElement. The canvas background visibly changes from white (light) to dark (dark mode). The Button component styling updates accordingly. No console errors during toggle."
+    },
+    "VAL-SB-005": {
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "terminal-output",
+          "description": "Read apps/storybook/.storybook/main.ts",
+          "content": "main.ts configures: framework '@storybook/react-vite', stories from '../stories/**/*.stories.@(ts|tsx)', addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-themes'], docs: {}, typescript: { reactDocgen: 'react-docgen' }"
+        },
+        {
+          "type": "screenshot",
+          "description": "Component Docs page (Button autodocs with props table, preview, and Show code button)",
+          "path": "/tmp/sb-docs-page.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "Accessibility (a11y) panel for Button ClickInteraction story showing 0 violations, 8 passes",
+          "path": "/tmp/sb-a11y-panel.png"
+        },
+        {
+          "type": "terminal-output",
+          "description": "Addon/config inspection",
+          "content": "Addons enabled: @storybook/addon-docs (autodocs), @storybook/addon-a11y (accessibility), @storybook/addon-themes (theme switching). All story files use tags: ['autodocs'] in meta for automatic documentation generation. react-docgen is configured for TypeScript prop extraction."
+        }
+      ],
+      "reason": "Storybook includes @storybook/addon-docs with autodocs enabled (all stories have tags: ['autodocs']). The Docs page renders component preview, prop controls table, and code snippets. The @storybook/addon-a11y addon is configured and the Accessibility panel shows 0 violations and 8 passes for the Button component."
+    },
+    "VAL-SB-006": {
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "terminal-output",
+          "description": "Read apps/storybook/.storybook/main.ts - interaction testing addon",
+          "content": "main.ts includes '@storybook/addon-docs' which includes the Interactions panel. The Storybook 9.x/10.x framework includes built-in interaction testing support via storybook/test."
+        },
+        {
+          "type": "terminal-output",
+          "description": "Stories implementing play/interactions",
+          "content": "button.stories.tsx - ClickInteraction story: play function uses userEvent.click + expect(args.onClick).toHaveBeenCalledOnce()\ninput.stories.tsx - TypeInteraction story: play function uses userEvent.type + expect(input).toHaveValue('Hello Storybook')\nBoth import from 'storybook/test': expect, fn, userEvent, within"
+        },
+        {
+          "type": "screenshot",
+          "description": "Interactions panel showing PASS status for Button ClickInteraction story with 2 passing steps",
+          "path": "/tmp/sb-interactions-panel.png"
+        }
+      ],
+      "reason": "Storybook has interaction testing enabled. Two stories exercise the interaction surface: Button/ClickInteraction (click + assertion) and Input/TypeInteraction (type + assertion). The Interactions panel shows PASS status with step-by-step results: userEvent.click → expect(onClick).toHaveBeenCalledOnce()."
+    }
+  },
+  "frictions": [],
+  "blockers": [],
+  "toolsUsed": ["agent-browser", "Read", "Grep", "Glob"]
+}

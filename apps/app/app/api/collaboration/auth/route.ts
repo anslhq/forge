@@ -1,5 +1,5 @@
-import { auth, currentUser } from "@repo/auth/server";
-import { authenticate } from "@repo/collaboration/auth";
+import { auth, currentUser } from "@platform/auth/server";
+import { authenticate } from "@platform/collaboration/auth";
 
 const COLORS = [
   "var(--color-red-500)",

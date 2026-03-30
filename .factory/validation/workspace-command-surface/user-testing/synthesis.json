@@ -1,0 +1,31 @@
+{
+  "milestone": "workspace-command-surface",
+  "round": 1,
+  "status": "pass",
+  "assertionsSummary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-CMD-001",
+    "VAL-CMD-002",
+    "VAL-CMD-003",
+    "VAL-CMD-004",
+    "VAL-TSCFG-004",
+    "VAL-X-001",
+    "VAL-X-002",
+    "VAL-X-003"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Added workspace-command-surface CLI testing guidance and note about check-types task visibility requiring script audit correlation.",
+      "source": "flow-report"
+    }
+  ],
+  "previousRound": null
+}

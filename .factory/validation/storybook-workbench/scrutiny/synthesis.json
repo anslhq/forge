@@ -1,0 +1,73 @@
+{
+  "milestone": "storybook-workbench",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "bun run check",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run check-types && bun x tsc --noEmit -p apps/web/tsconfig.json && bun x tsc --noEmit -p packages/ui/tsconfig.json && bun x tsc --noEmit -p apps/storybook/tsconfig.json",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "bun run check",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [
+    {
+      "target": "library",
+      "description": "Created .factory/library/storybook.md documenting the react-docgen vs react-docgen-typescript tradeoff in Storybook 9 (CVA VariantProps show as unknown in ArgTypes).",
+      "sourceFeature": "storybook-add-stories-docs-themes-and-interactions"
+    }
+  ],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Update the 'Reserved / planned local ports' section to clarify that Storybook underlying port 4311 is a default fallback only — when running through Portless, the actual port is dynamically assigned via the PORT env var. Consider adding a note: 'When Portless manages the app, the PORT env var overrides the default. 4311 is used only when running Storybook directly without Portless.'",
+      "evidence": "Feature storybook-stabilize-portless-startup-surface (commit bec5de1) changed apps/storybook/package.json to use --port ${PORT:-4311}. Three reviewers noted the AGENTS.md port listing is now slightly inaccurate since ports are dynamic under Portless.",
+      "isSystemic": false
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add a note about the web service having the same PORT env var mismatch that was fixed for Storybook: the web service start command uses PORTLESS_APP_PORT=4310 (which is not a real Portless env var) and hardcodes --port 4310, while Portless assigns a dynamic port via PORT. This should be addressed in the web-migration-cleanup milestone.",
+      "evidence": "Feature storybook-stabilize-portless-startup-surface reviewer noted services.yaml web service uses the same anti-pattern that caused Storybook 502s. The portless.md knowledge file now documents that PORTLESS_APP_PORT has no effect.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Hardcoded absolute paths in services.yaml for typecheck and service start commands",
+      "reason": "services.yaml is machine-specific factory infrastructure that is not committed to shared branches. Absolute paths are the expected pattern for this file."
+    },
+    {
+      "observation": "Storybook 9 autodocs removal from docs options — skill should document this",
+      "reason": "already-documented — the storybook-worker SKILL.md was already updated in a subsequent feature to include this guidance"
+    },
+    {
+      "observation": "Worker created library files for architecture and portless conventions",
+      "reason": "already-documented — informational observation about good existing knowledge capture, no action needed"
+    },
+    {
+      "observation": "services.yaml was correctly created with required services",
+      "reason": "already-documented — informational, no gap to address"
+    },
+    {
+      "observation": "Skill updated with PORT handling and addon-docs guidance",
+      "reason": "already-documented — both skill updates were already applied by the worker features"
+    }
+  ],
+  "previousRound": null
+}

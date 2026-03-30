@@ -8,14 +8,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@repo/design-system/components/ui/alert-dialog";
+} from "@platform/design-system/components/ui/alert-dialog";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * A modal dialog that interrupts the user with important content and expects
  * a response.
  */
-const meta = {
+const meta: Meta<typeof AlertDialog> = {
   title: "ui/AlertDialog",
   component: AlertDialog,
   tags: ["autodocs"],
@@ -41,7 +41,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof AlertDialog>;
+};
 
 export default meta;
 

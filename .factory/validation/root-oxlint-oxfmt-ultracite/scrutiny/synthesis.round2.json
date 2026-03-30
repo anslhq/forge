@@ -1,0 +1,57 @@
+{
+  "milestone": "root-oxlint-oxfmt-ultracite",
+  "round": 2,
+  "status": "fail",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "N/A (no dedicated test command defined in .factory/services.yaml mission validation)",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run check-types",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "bun run check",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "failedFeatures": ["scope-cleanup-root-oxlint-migration"]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "scope-cleanup-root-oxlint-migration",
+      "severity": "blocking",
+      "description": "Fix commit only added ignore patterns in .gitignore and did not remove or isolate out-of-scope mission/orchestration files from the original failed feature."
+    },
+    {
+      "featureId": "scope-cleanup-root-oxlint-migration",
+      "severity": "blocking",
+      "description": "Fix commit did not address previously identified unrelated app/package source churn from the original root tooling migration commit."
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "skills",
+      "suggestion": "Add explicit scrutiny-fix guidance requiring concrete closure evidence for each prior blocking issue (e.g., targeted reverts/isolation), not only validator cleanliness updates.",
+      "evidence": "Review for scope-cleanup-root-oxlint-migration found only .gitignore changes while both prior blockers remained unresolved.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Clarify milestone ownership for cross-milestone fix features so scrutiny reruns can deterministically identify and review remediation features.",
+      "evidence": "Fix feature used for root-oxlint rerun is recorded under workspace-command-surface, creating traceability ambiguity.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": ".factory/validation/root-oxlint-oxfmt-ultracite/scrutiny/synthesis.round1.json"
+}

@@ -1,0 +1,201 @@
+/* Ansl MP225 shadcn/ui theme mapping
+   Structural tokens preserved from your selected Maia preset:
+   - radius scale
+   - theme-inline radius aliases
+   - dark variant setup
+   - border/input/ring variable hooks
+   This file replaces semantic colors with Ansl values
+   and adds documented gradient variables for large-format brand surfaces.
+*/
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #fcfaf8;
+  --foreground: #1c1b1a;
+  --card: #f9f5f1;
+  --card-foreground: #1c1b1a;
+  --popover: #f9f5f1;
+  --popover-foreground: #1c1b1a;
+  --primary: #6a31ca;
+  --primary-foreground: #fcfaf8;
+  --secondary: #f4efe8;
+  --secondary-foreground: #1c1b1a;
+  --muted: #f4efe8;
+  --muted-foreground: #525251;
+  --accent: #e9e0f7;
+  --accent-foreground: #1c1b1a;
+  --destructive: #b73a58;
+  --border: #eadfd0;
+  --input: #eadfd0;
+  --ring: #8050d2;
+  --chart-1: #6a31ca;
+  --chart-2: #6adc99;
+  --chart-3: #d6d66b;
+  --chart-4: #f77fbe;
+  --chart-5: #373635;
+
+  /* Brand gradients: use for hero / decorative surfaces only */
+  --gradient-hero: linear-gradient(
+    180deg,
+    #eae1d2 0%,
+    #eae1d1 38%,
+    #ece6af 58%,
+    #e1ec88 74%,
+    #80df9e 100%
+  );
+  --gradient-brand-aura: radial-gradient(
+    circle at 45% 45%,
+    rgba(151, 111, 218, 1) 0%,
+    rgba(106, 49, 202, 1) 35%,
+    rgba(247, 127, 190, 0.92) 72%,
+    rgba(252, 250, 248, 0) 100%
+  );
+  --gradient-signal-support: linear-gradient(
+    135deg,
+    #6adc99 0%,
+    #eeee77 48%,
+    #f77fbe 100%
+  );
+  --gradient-twilight-brand: linear-gradient(
+    160deg,
+    #1c1b1a 0%,
+    #351865 32%,
+    #6a31ca 58%,
+    #b498e4 82%,
+    #eadfd0 100%
+  );
+
+  --radius: 0.625rem;
+  --sidebar: #f9f5f1;
+  --sidebar-foreground: #1c1b1a;
+  --sidebar-primary: #6a31ca;
+  --sidebar-primary-foreground: #fcfaf8;
+  --sidebar-accent: #f4efe8;
+  --sidebar-accent-foreground: #1c1b1a;
+  --sidebar-border: #eadfd0;
+  --sidebar-ring: #8050d2;
+}
+
+.dark {
+  --background: #121111;
+  --foreground: #fcfaf8;
+  --card: #1c1b1a;
+  --card-foreground: #fcfaf8;
+  --popover: #2a2928;
+  --popover-foreground: #fcfaf8;
+  --primary: #6a31ca;
+  --primary-foreground: #fcfaf8;
+  --secondary: #2a2928;
+  --secondary-foreground: #fcfaf8;
+  --muted: #2a2928;
+  --muted-foreground: #d3c9bb;
+  --accent: #2a2928;
+  --accent-foreground: #fcfaf8;
+  --destructive: #dc697f;
+  --border: #fcfaf81a;
+  --input: #fcfaf81a;
+  --ring: #8050d2;
+  --chart-1: #976fda;
+  --chart-2: #97e6b8;
+  --chart-3: #f1f18b;
+  --chart-4: #f9a5d2;
+  --chart-5: #d3c9bb;
+
+  /* Brand gradients: use for hero / decorative surfaces only */
+  --gradient-hero: linear-gradient(
+    180deg,
+    #1c1b1a 0%,
+    #271e32 18%,
+    #3f2469 36%,
+    #5c2da6 52%,
+    #7f3dc3 64%,
+    #dd7ab9 78%,
+    #efc78d 90%,
+    #ede07e 100%
+  );
+  --gradient-brand-aura: radial-gradient(
+    circle at 45% 45%,
+    rgba(151, 111, 218, 1) 0%,
+    rgba(106, 49, 202, 1) 35%,
+    rgba(247, 127, 190, 0.88) 72%,
+    rgba(18, 17, 17, 0) 100%
+  );
+  --gradient-signal-support: linear-gradient(
+    135deg,
+    #6adc99 0%,
+    #eeee77 48%,
+    #f77fbe 100%
+  );
+  --gradient-twilight-brand: linear-gradient(
+    160deg,
+    #1c1b1a 0%,
+    #351865 32%,
+    #6a31ca 58%,
+    #b498e4 82%,
+    #eadfd0 100%
+  );
+
+  --sidebar: #1c1b1a;
+  --sidebar-foreground: #fcfaf8;
+  --sidebar-primary: #8050d2;
+  --sidebar-primary-foreground: #fcfaf8;
+  --sidebar-accent: #2a2928;
+  --sidebar-accent-foreground: #fcfaf8;
+  --sidebar-border: #fcfaf81a;
+  --sidebar-ring: #8050d2;
+}
+
+@theme inline {
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Optional additions to document in Supernova even if not wired yet:
+   color.text.brand
+   color.status.ai.*
+   color.status.opportunity.*
+   elevation.*
+   blur.*
+   duration.*
+   zIndex.*
+   gradient.surface.hero
+   gradient.brand.aura
+   gradient.signal.support
+*/

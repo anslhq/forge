@@ -1,0 +1,26 @@
+{
+  "featureId": "align-workspace-check-and-fix-scripts",
+  "reviewedAt": "2026-03-07T09:29:31Z",
+  "commitId": "66cfd91",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Commit 66cfd91 is narrowly scoped and aligns with the feature intent: it adds consistent workspace `check` and `fix` scripts to the relevant implementation workspaces (`apps/web`, `packages/backend`, `packages/env`) using the same root Ultracite command surface. The implementation matches expected behavior for VAL-CMD-003, and the handoff explicitly documents intentional exclusion of `packages/typescript-config` as config-only.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "Assigned worker skill `tooling-migration-worker` is referenced by mission features but is not present in repo skill registry, causing repeated procedure deviations.",
+      "evidence": "Feature metadata uses `skillName: tooling-migration-worker` (`/Users/harsha/.factory/missions/3af10550-d17c-4797-bfea-7bb1a45d8f18/features.json`), but searching `/Users/harsha/Developer/mailshieldai/platform/.factory/skills` returns no `tooling-migration-worker` match; this worker handoff records the resulting deviation in `handoff.skillFeedback.deviations[0]`."
+    },
+    {
+      "area": "services",
+      "observation": "Mission worker startup expectations reference repo-local `.factory/services.yaml` and `.factory/init.sh`, but those files are absent in this checkout, forcing startup-process deviations.",
+      "evidence": "Current repo `.factory/` contains only `library/`, `skills/`, and `validation/` (no `services.yaml` or `init.sh`), and this feature handoff records that absence in `handoff.discoveredIssues`. Prior cleanup feature `remove-root-migration-factory-artifacts` explicitly removed `.factory/init.sh`, `.factory/services.yaml`, and `.factory/skills/tooling-migration-worker/SKILL.md` (`/Users/harsha/.factory/missions/3af10550-d17c-4797-bfea-7bb1a45d8f18/handoffs/2026-03-07T08-58-14-210Z__remove-root-migration-factory-artifacts__8de62b76-e176-4310-9604-2b6010645298.json`)."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Review passed. The feature implementation is correctly scoped and satisfies the workspace `check`/`fix` alignment objective; no code defects were found in commit 66cfd91. Two shared-state gaps were observed around missing worker skill registration and missing startup service/init files."
+}

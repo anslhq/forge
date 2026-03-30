@@ -1,0 +1,31 @@
+{
+  "milestone": "storybook-workbench",
+  "round": 1,
+  "status": "pass",
+  "assertionsSummary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-SB-001",
+    "VAL-SB-002",
+    "VAL-SB-003",
+    "VAL-SB-004",
+    "VAL-SB-005",
+    "VAL-SB-006",
+    "VAL-CROSS-003",
+    "VAL-CROSS-004"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Added storybook-workbench milestone section and flow validator guidance for storybook-browser and storybook-cli-config surfaces",
+      "source": "setup"
+    }
+  ],
+  "previousRound": null
+}

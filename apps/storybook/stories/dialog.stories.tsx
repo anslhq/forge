@@ -7,14 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@repo/design-system/components/ui/dialog";
+} from "@platform/design-system/components/ui/dialog";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * A window overlaid on either the primary window or another dialog window,
  * rendering the content underneath inert.
  */
-const meta = {
+const meta: Meta<typeof Dialog> = {
   title: "ui/Dialog",
   component: Dialog,
   tags: ["autodocs"],
@@ -49,7 +49,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Dialog>;
+};
 
 export default meta;
 

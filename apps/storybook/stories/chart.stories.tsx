@@ -3,7 +3,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@repo/design-system/components/ui/chart";
+} from "@platform/design-system/components/ui/chart";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo } from "react";
 import {
@@ -67,7 +67,7 @@ const singleSeriesConfig = {
 /**
  * Beautiful charts. Built using Recharts. Copy and paste into your apps.
  */
-const meta = {
+const meta: Meta<typeof ChartContainer> = {
   title: "ui/Chart",
   component: ChartContainer,
   tags: ["autodocs"],
@@ -75,7 +75,7 @@ const meta = {
   args: {
     children: <div />,
   },
-} satisfies Meta<typeof ChartContainer>;
+};
 
 export default meta;
 

@@ -3,14 +3,14 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@repo/design-system/components/ui/tabs";
+} from "@platform/design-system/components/ui/tabs";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * A set of layered sections of content—known as tab panels—that are displayed
  * one at a time.
  */
-const meta = {
+const meta: Meta<typeof Tabs> = {
   title: "ui/Tabs",
   component: Tabs,
   tags: ["autodocs"],
@@ -34,7 +34,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Tabs>;
+};
 
 export default meta;
 

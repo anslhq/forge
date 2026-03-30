@@ -6,13 +6,13 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@repo/design-system/components/ui/pagination";
+} from "@platform/design-system/components/ui/pagination";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Pagination with page navigation, next and previous links.
  */
-const meta = {
+const meta: Meta<typeof Pagination> = {
   title: "ui/Pagination",
   component: Pagination,
   tags: ["autodocs"],
@@ -44,7 +44,7 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Pagination>;
+};
 
 export default meta;
 

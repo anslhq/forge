@@ -1,0 +1,46 @@
+{
+  "milestone": "root-oxlint-oxfmt-ultracite",
+  "round": 4,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "N/A (no dedicated test command defined in mission validation gate)",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run check-types",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "bun run check",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add explicit guidance for when committed mission-scoped `.factory/*` files should be treated as out-of-scope remediation residue and removed/reverted in scope-overreach fixes.",
+      "evidence": "Round-3 failure required a dedicated follow-up fix because the previous remediation did not directly remove the `.factory/*` blocker paths.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Clarify mission metadata/skill lifecycle rules so feature records do not reference removed skill files during later remediation rounds.",
+      "evidence": "The passing review noted feature metadata still references `tooling-migration-worker` while `.factory/skills/tooling-migration-worker/SKILL.md` was removed in the fix commit.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [],
+  "previousRound": ".factory/validation/root-oxlint-oxfmt-ultracite/scrutiny/synthesis.round3.json"
+}

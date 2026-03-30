@@ -1,11 +1,11 @@
-import { Button } from "@repo/design-system/components/ui/button";
+import { Button } from "@platform/design-system/components/ui/button";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Loader2, Mail } from "lucide-react";
 
 /**
  * Displays a button or a component that looks like a button.
  */
-const meta = {
+const meta: Meta<typeof Button> = {
   title: "ui/Button",
   component: Button,
   tags: ["autodocs"],
@@ -22,7 +22,7 @@ const meta = {
     size: "default",
     children: "Button",
   },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
 

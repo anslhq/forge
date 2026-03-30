@@ -1,0 +1,14 @@
+commands:
+  install: bun install
+  lint: bun run check
+  fix: bun run fix
+  typecheck: bun x tsc --noEmit -p "/Users/harsha/Developer/anslhq/forge/apps/app/tsconfig.json" && bun x tsc --noEmit -p "/Users/harsha/Developer/anslhq/forge/apps/web/tsconfig.json" && bun x tsc --noEmit -p "/Users/harsha/Developer/anslhq/forge/apps/storybook/tsconfig.json" && bun x tsc --noEmit -p "/Users/harsha/Developer/anslhq/forge/packages/design-system/tsconfig.json" && bun x tsc --noEmit -p "/Users/harsha/Developer/anslhq/forge/packages/backend/tsconfig.json"
+  build: bun run build
+  dev: bun run dev
+  dev:server: bun run dev:server
+  dev:setup: bun run dev:setup
+  migrate: bun run migrate
+  migrate:deploy: bun run migrate:deploy
+  test: bun run test
+
+services: {}

@@ -1,0 +1,45 @@
+{
+  "featureId": "root-dev-portless-followup",
+  "reviewedAt": "2026-03-08T04:15:00.000Z",
+  "commitId": "459dbb1",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The implementation is clean, minimal, and correctly satisfies the feature description and VAL-CROSS-005. The new `scripts/dev.sh` properly orchestrates Portless proxy startup, launches both web and storybook through their existing committed startup scripts, prints the Portless URLs, and handles cleanup on exit via trap. The package.json change replaces `turbo dev` with the new script and preserves raw `turbo dev` as `dev:turbo` fallback. The services.yaml addition is consistent with existing entries. The script uses `set -euo pipefail`, resolves ROOT_DIR dynamically, and handles both EXIT and signal traps correctly.",
+    "issues": [
+      {
+        "file": ".factory/services.yaml",
+        "line": 11,
+        "severity": "non_blocking",
+        "description": "The `dev` command in services.yaml uses a hardcoded absolute path (`bash \"/Users/harsha/Developer/anslhq/platform/scripts/dev.sh\"`). This is consistent with other entries in the same file (build, typecheck, web start, storybook start all use absolute paths), so it follows existing convention. However, it means the file is machine-specific. This is a pre-existing pattern, not introduced by this feature."
+      },
+      {
+        "file": "scripts/dev.sh",
+        "line": 18,
+        "severity": "non_blocking",
+        "description": "The proxy check uses `lsof -iTCP:1355` which is macOS-specific. This is consistent with the existing `services.yaml` healthcheck for portless (`lsof -iTCP:1355 -sTCP:LISTEN >/dev/null`) so it follows established convention, but limits Linux portability."
+      },
+      {
+        "file": "scripts/dev.sh",
+        "line": 40,
+        "severity": "non_blocking",
+        "description": "The cleanup function kills the direct child PIDs (the start-portless.sh scripts) but doesn't explicitly stop the Portless proxy. This is reasonable — the proxy is a shared resource that may be used independently — but if a user only uses `bun run dev` and expects full cleanup, the proxy will remain running. The child start-portless.sh scripts handle their own child process cleanup via their own traps, and the `kill` signal will propagate through the process group, so this should work correctly in practice."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The worker noted in skillFeedback that the `storybook-worker` skill was not well-suited for this Portless root-dev orchestration feature. Most of the skill's guidance about stories, docs, a11y, and interaction surfaces didn't apply. The worker suggested a more generic 'portless-worker' or 'dev-surface' skill might be a better fit.",
+      "evidence": "Handoff skillFeedback.suggestedChanges: 'The storybook-worker skill is oriented toward Storybook app setup/stories work. For this Portless root-dev feature, most of the skill's guidance about stories, docs, a11y, and interaction surfaces didn't apply.'"
+    },
+    {
+      "area": "knowledge",
+      "observation": "The root dev orchestration pattern (proxy check → launch child scripts in parallel → trap cleanup → wait) is now a reusable pattern that could be documented in .factory/library/portless.md for future workers who need to compose multiple Portless surfaces.",
+      "evidence": "scripts/dev.sh implements the pattern; .factory/library/portless.md currently documents individual app startup resilience but not the root orchestration composition pattern."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "The implementation correctly wires root `bun run dev` to a Portless-backed orchestrator script that starts both web and storybook through their existing committed startup scripts. The script is well-structured with proper error handling, signal traps, and cleanup. All three changed files (scripts/dev.sh, package.json, .factory/services.yaml) are consistent with existing project conventions. The worker verified the full flow manually and confirmed both surfaces start and report ready at their Portless URLs. No blocking issues found — only minor non-blocking observations about macOS-specific tooling and proxy lifecycle, both of which follow pre-existing patterns."
+}

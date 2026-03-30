@@ -1,14 +1,20 @@
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from "@repo/design-system/components/ui/toggle-group";
+} from "@platform/design-system/components/ui/toggle-group";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Bold, Italic, Underline } from "lucide-react";
+import type { ComponentProps } from "react";
+
+type ToggleGroupStoryProps = Pick<
+  ComponentProps<typeof ToggleGroup>,
+  "disabled" | "size" | "type" | "variant"
+>;
 
 /**
  * A set of two-state buttons that can be toggled on or off.
  */
-const meta = {
+const meta: Meta<ToggleGroupStoryProps> = {
   title: "ui/ToggleGroup",
   component: ToggleGroup,
   tags: ["autodocs"],
@@ -40,11 +46,11 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof ToggleGroup>;
+};
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ToggleGroupStoryProps>;
 
 /**
  * The default form of the toggle group.

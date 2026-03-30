@@ -1,12 +1,12 @@
-import { authMiddleware } from "@repo/auth/proxy";
-import { internationalizationMiddleware } from "@repo/internationalization/proxy";
-import { parseError } from "@repo/observability/error";
-import { secure } from "@repo/security";
+import { authMiddleware } from "@platform/auth/proxy";
+import { internationalizationMiddleware } from "@platform/internationalization/proxy";
+import { parseError } from "@platform/observability/error";
+import { secure } from "@platform/security";
 import {
   noseconeOptions,
   noseconeOptionsWithToolbar,
   securityMiddleware,
-} from "@repo/security/proxy";
+} from "@platform/security/proxy";
 import { createNEMO } from "@rescale/nemo";
 import { type NextProxy, type NextRequest, NextResponse } from "next/server";
 import { env } from "@/env";

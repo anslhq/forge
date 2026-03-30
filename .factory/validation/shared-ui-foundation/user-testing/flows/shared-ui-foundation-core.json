@@ -1,0 +1,175 @@
+{
+  "groupId": "shared-ui-foundation-core",
+  "testedAt": "2026-03-07T14:28:22Z",
+  "credentials": {
+    "account": "shared-ui-validator-1",
+    "namespace": "sui-foundation-ns-1"
+  },
+  "toolsUsed": ["Read", "LS", "Grep", "Execute", "agent-browser"],
+  "assertions": [
+    {
+      "id": "VAL-SUI-001",
+      "title": "Shared UI workspace package exists with public exports",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "LS /Users/harsha/Developer/anslhq/platform/packages/ui",
+          "expected": "packages/ui exists as workspace package",
+          "observed": "Directory exists with package.json, components.json, src/, tsconfig.json"
+        },
+        {
+          "action": "Read /Users/harsha/Developer/anslhq/platform/packages/ui/package.json",
+          "expected": "Public exports defined for components/styles/utils/hooks",
+          "observed": "exports includes '.', './components/*', './hooks', './lib/utils', './styles', './styles.css'"
+        },
+        {
+          "action": "rg -n \"from ['\\\"]@platform/ui/src|@platform/ui/src/\" /Users/harsha/Developer/anslhq/platform/apps /Users/harsha/Developer/anslhq/platform/packages",
+          "expected": "No consumer deep-imports into @platform/ui/src",
+          "observed": "No matches (exit code 1)"
+        },
+        {
+          "action": "rg -n \"from ['\\\"]@platform/ui|from ['\\\"]@platform/ui/\" /Users/harsha/Developer/anslhq/platform/apps/web",
+          "expected": "Consumers use @platform/ui public imports",
+          "observed": "apps/web/src/components/mode-toggle.tsx imports @platform/ui/components/button and @platform/ui/components/dropdown-menu"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "n/a",
+        "network": "n/a",
+        "commands": [
+          "LS /Users/harsha/Developer/anslhq/platform/packages/ui",
+          "Read /Users/harsha/Developer/anslhq/platform/packages/ui/package.json",
+          "rg -n \"from ['\\\"]@platform/ui/src|@platform/ui/src/\" /Users/harsha/Developer/anslhq/platform/apps /Users/harsha/Developer/anslhq/platform/packages",
+          "rg -n \"from ['\\\"]@platform/ui|from ['\\\"]@platform/ui/\" /Users/harsha/Developer/anslhq/platform/apps/web"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SUI-002",
+      "title": "Shared design tokens and base styles are owned by the shared package",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read /Users/harsha/Developer/anslhq/platform/packages/ui/src/styles/index.css",
+          "expected": "Canonical token and base style definitions live in packages/ui",
+          "observed": "Root + dark token variables and base layer styles are defined in packages/ui/src/styles/index.css"
+        },
+        {
+          "action": "Read /Users/harsha/Developer/anslhq/platform/apps/web/src/index.css",
+          "expected": "Web app consumes shared style surface",
+          "observed": "apps/web/src/index.css imports @platform/ui/styles.css"
+        },
+        {
+          "action": "agent-browser --session shared-ui-foundation-core open http://web.platform.localhost:1355 && snapshot/click/screenshot",
+          "expected": "Consumer render visible in both light and dark themes",
+          "observed": "Captured light and dark screenshots; html class evaluates to 'dark' after selecting Dark"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "/Users/harsha/Developer/anslhq/platform/.factory/validation/shared-ui-foundation/user-testing/evidence/web-light.png",
+          "/Users/harsha/Developer/anslhq/platform/.factory/validation/shared-ui-foundation/user-testing/evidence/web-dark.png"
+        ],
+        "consoleErrors": "agent-browser errors: [CONVEX FATAL ERROR] Couldn't parse deployment name demo (appeared twice)",
+        "network": "n/a",
+        "commands": [
+          "Read /Users/harsha/Developer/anslhq/platform/packages/ui/src/styles/index.css",
+          "Read /Users/harsha/Developer/anslhq/platform/apps/web/src/index.css",
+          "agent-browser --session shared-ui-foundation-core open \"http://web.platform.localhost:1355\"",
+          "agent-browser --session shared-ui-foundation-core snapshot -i",
+          "agent-browser --session shared-ui-foundation-core screenshot \"/Users/harsha/Developer/anslhq/platform/.factory/validation/shared-ui-foundation/user-testing/evidence/web-light.png\"",
+          "agent-browser --session shared-ui-foundation-core click @e2",
+          "agent-browser --session shared-ui-foundation-core click @e4",
+          "agent-browser --session shared-ui-foundation-core screenshot \"/Users/harsha/Developer/anslhq/platform/.factory/validation/shared-ui-foundation/user-testing/evidence/web-dark.png\"",
+          "agent-browser --session shared-ui-foundation-core eval \"document.documentElement.className\"",
+          "agent-browser --session shared-ui-foundation-core errors"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SUI-003",
+      "title": "Shared utilities, hooks, and primitive ownership move into packages/ui",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "ls -R /Users/harsha/Developer/anslhq/platform/packages/ui/src",
+          "expected": "Shared primitives/hooks/lib exist under packages/ui/src",
+          "observed": "components/, hooks/, lib/, styles/ exist with reusable primitives and utils"
+        },
+        {
+          "action": "Read /Users/harsha/Developer/anslhq/platform/packages/ui/src/lib/utils.ts",
+          "expected": "Canonical shared utility is package-owned",
+          "observed": "cn utility implemented in packages/ui/src/lib/utils.ts"
+        },
+        {
+          "action": "Read /Users/harsha/Developer/anslhq/platform/packages/ui/src/hooks/index.ts",
+          "expected": "Portable hook surface exists in shared package",
+          "observed": "hooks index exists and exports HAS_SHARED_UI_HOOKS"
+        },
+        {
+          "action": "rg -n \"@/lib/utils|@/components/ui/|@/hooks/\" /Users/harsha/Developer/anslhq/platform/packages/ui/src",
+          "expected": "No shared-ui dependency on app-local utility/primitive paths",
+          "observed": "No matches (exit code 1)"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "n/a",
+        "network": "n/a",
+        "commands": [
+          "ls -R /Users/harsha/Developer/anslhq/platform/packages/ui/src",
+          "Read /Users/harsha/Developer/anslhq/platform/packages/ui/src/lib/utils.ts",
+          "Read /Users/harsha/Developer/anslhq/platform/packages/ui/src/hooks/index.ts",
+          "rg -n \"@/lib/utils|@/components/ui/|@/hooks/\" /Users/harsha/Developer/anslhq/platform/packages/ui/src"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-SUI-005",
+      "title": "shadcn monorepo wiring points future shared components into packages/ui",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Read /Users/harsha/Developer/anslhq/platform/apps/web/components.json",
+          "expected": "shadcn aliases for ui/utils point to shared package",
+          "observed": "apps/web/components.json maps ui -> @platform/ui/components and utils -> @platform/ui/lib/utils"
+        },
+        {
+          "action": "Read /Users/harsha/Developer/anslhq/platform/apps/web/tsconfig.json",
+          "expected": "TypeScript path wiring includes @platform/ui",
+          "observed": "compilerOptions.paths includes @platform/ui and @platform/ui/*"
+        },
+        {
+          "action": "Read /Users/harsha/Developer/anslhq/platform/packages/ui/components.json",
+          "expected": "Shared package has shadcn config targeting shared ownership",
+          "observed": "packages/ui/components.json aliases components/ui/utils/lib/hooks to @platform/ui targets"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "n/a",
+        "network": "n/a",
+        "commands": [
+          "Read /Users/harsha/Developer/anslhq/platform/apps/web/components.json",
+          "Read /Users/harsha/Developer/anslhq/platform/apps/web/tsconfig.json",
+          "Read /Users/harsha/Developer/anslhq/platform/packages/ui/components.json"
+        ]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "claude-in-chrome navigation to the Portless URL was permission-denied in this run, so browser evidence collection was completed via the agent-browser tool against the same Portless URL.",
+      "resolved": true,
+      "resolution": "Used a single agent-browser session (shared-ui-foundation-core) to collect light/dark screenshots, theme interaction state, and console errors.",
+      "affectedAssertions": ["VAL-SUI-002"]
+    }
+  ],
+  "blockers": [],
+  "summary": "Validated 4 assertions: 4 passed, 0 failed, 0 blocked. Shared package/export ownership, shared style token ownership, shared primitive/util ownership, and shadcn wiring requirements were all evidenced."
+}

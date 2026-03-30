@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "convex": {
+      "command": "npx",
+      "args": ["-y", "convex@latest", "mcp", "start"]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["-y", "shadcn@latest", "mcp"]
+    },
+    "next-devtools": {
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@latest"]
+    },
+    "openspace": {
+      "command": "/Users/harsha/Developer/OpenSpace/.venv/bin/openspace-mcp",
+      "env": {
+        "OPENSPACE_HOST_SKILL_DIRS": "/Users/harsha/Developer/anslhq/forge/.agents/skills",
+        "OPENSPACE_WORKSPACE": "/Users/harsha/Developer/OpenSpace"
+      }
+    }
+  }
+}

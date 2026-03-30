@@ -72,11 +72,9 @@ const initializeGit = () => {
 
 const setupEnvironmentVariables = async () => {
   const files = [
-    { source: join("apps", "api"), target: ".env.local" },
     { source: join("apps", "app"), target: ".env.local" },
     { source: join("apps", "web"), target: ".env.local" },
-    { source: join("packages", "cms"), target: ".env.local" },
-    { source: join("packages", "database"), target: ".env" },
+    { source: join("packages", "backend"), target: ".env.local" },
     { source: join("packages", "internationalization"), target: ".env.local" },
   ];
 
@@ -85,10 +83,10 @@ const setupEnvironmentVariables = async () => {
   }
 };
 
-const setupOrm = (packageManager: PackageManagerName) => {
+const setupBackend = (packageManager: PackageManagerName) => {
   const filterCommand = packageManager === "npm" ? "--workspace" : "--filter";
 
-  run(packageManager, ["run", "build", filterCommand, "@repo/database"]);
+  run(packageManager, ["run", "build", filterCommand, "@platform/backend"]);
 };
 
 const updatePackageManagerConfiguration = async (
@@ -271,8 +269,8 @@ export const initialize = async (options: {
     s.message("Installing dependencies...");
     await installDependencies(packageManager);
 
-    s.message("Setting up ORM...");
-    setupOrm(packageManager);
+    s.message("Setting up backend package...");
+    setupBackend(packageManager);
 
     if (!options.disableGit) {
       s.message("Initializing Git repository...");

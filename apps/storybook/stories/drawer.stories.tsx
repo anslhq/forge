@@ -7,7 +7,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@repo/design-system/components/ui/drawer";
+} from "@platform/design-system/components/ui/drawer";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
@@ -54,4 +54,4 @@ type Story = StoryObj<typeof meta>;
 /**
  * The default form of the drawer.
  */
-export const Default: Story = {};
+export const Default: Story = { args: {} as never };

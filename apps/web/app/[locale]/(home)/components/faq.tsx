@@ -3,9 +3,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@repo/design-system/components/ui/accordion";
-import { Button } from "@repo/design-system/components/ui/button";
-import type { Dictionary } from "@repo/internationalization";
+} from "@platform/design-system/components/ui/accordion";
+import { Button } from "@platform/design-system/components/ui/button";
+import type { Dictionary } from "@platform/internationalization";
 import { PhoneCall } from "lucide-react";
 import Link from "next/link";
 

@@ -1,0 +1,39 @@
+{
+  "featureId": "replace-root-biome-with-oxlint-oxfmt-config",
+  "reviewedAt": "2026-03-07T07:55:33Z",
+  "commitId": "d79c6ddabf0550c0c83ac553dc0ccaf8b7782e17",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The feature meets the core OxLint/Oxfmt migration requirements (.oxlintrc/.oxfmtrc present, root package migrated off @biomejs/biome), but the committed scope is far broader than the feature contract and includes many unrelated project and mission-artifact file changes.",
+    "issues": [
+      {
+        "file": ".factory/services.yaml",
+        "line": 1,
+        "severity": "blocking",
+        "description": "This feature commit includes new mission/orchestration metadata files that are outside the feature description and expectedBehavior, which are limited to root lint/format backend migration. Evidence: commit file list includes .factory/* additions and updates across 55 files for this single feature."
+      },
+      {
+        "file": "apps/web/src/components/ui/dropdown-menu.tsx",
+        "line": 1,
+        "severity": "blocking",
+        "description": "The commit introduces broad application-source churn (formatting and unrelated file edits across apps/web and other packages), which violates the mission requirement to keep changes minimal and mission-driven for the assigned root-tooling migration scope."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The worker transcript shows a justified deviation on baseline validation behavior for known pre-existing failures, suggesting the mission-worker-base procedure should explicitly permit in-place remediation when the assigned feature targets the failing baseline itself.",
+      "evidence": "Handoff skillFeedback for session 9bac3e2d-36f6-4857-891c-985c0619f671 marks followedProcedure=false with baseline-validation deviation and rationale tied to known Biome failure."
+    },
+    {
+      "area": "knowledge",
+      "observation": "Shared library command-surface documentation is stale relative to the renamed TypeScript config package, which can mislead later workers during migration steps.",
+      "evidence": ".factory/library/repo-command-surface.md:37 still documents `packages/config` after migration to `packages/typescript-config`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Feature functionality landed, but scrutiny fails due to blocking scope overreach: the feature commit bundles substantial unrelated repository and mission-artifact changes beyond the contracted root OxLint/Oxfmt migration."
+}

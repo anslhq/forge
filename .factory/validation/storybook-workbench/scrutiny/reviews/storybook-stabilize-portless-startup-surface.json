@@ -1,0 +1,44 @@
+{
+  "featureId": "storybook-stabilize-portless-startup-surface",
+  "reviewedAt": "2026-03-08T02:30:00.000Z",
+  "commitId": "bec5de1",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Solid fix that correctly identifies and resolves the root cause: Portless assigns a dynamic port via the PORT env var, but Storybook was ignoring it and listening on a different port, causing 502s when the proxy route existed but the upstream was unreachable. The fix is a three-part approach: (1) package.json dev script respects PORT with --port ${PORT:-4311}, (2) a startup wrapper script (start-portless.sh) launches Storybook via Portless and polls the Portless URL until the full proxy chain responds, (3) services.yaml and portless.md are updated to reflect the corrected behavior. The startup script is well-structured with set -euo pipefail, proper cleanup traps, configurable timeout/URL via env vars, and correct trap removal after health check passes so the child process persists. All verification commands (bun run check, tsc --noEmit, storybook build) passed, and the manual HTTP verification confirmed 200 on first request after the script reports ready.",
+    "issues": [
+      {
+        "file": ".factory/services.yaml",
+        "line": 31,
+        "severity": "non_blocking",
+        "description": "The stop command uses a fragile sed regex to parse PID from `portless list` output (sed \"s/.*pid \\([0-9]*\\).*/\\1/\"). If the portless list output format changes (e.g., different wording, different PID placement), the stop command will silently fail and fall back to lsof on port 4311 — which may not match the dynamic port. The fallback chain (|| lsof -ti :4311 | xargs kill 2>/dev/null || true) mitigates this by using the default port, but it's still a potential gap if the dynamic port differs from 4311."
+      },
+      {
+        "file": ".factory/services.yaml",
+        "line": 33,
+        "severity": "non_blocking",
+        "description": "The `port: 4311` field is now semantically misleading — the actual port is dynamic (assigned by Portless via PORT). The field serves as a fallback default in the dev script, but future workers reading services.yaml might assume Storybook always listens on 4311. A comment or renaming to `defaultPort` would clarify intent, though this is a services.yaml schema constraint, not a bug."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "services",
+      "observation": "The web service in services.yaml still has the same PORT mismatch that was fixed for Storybook: it uses `PORTLESS_APP_PORT=4310` (which is not a real Portless env var, per the updated portless.md) and `--port 4310` hardcoded, while Portless assigns a different dynamic port. The worker correctly noted this as out of scope but it should be tracked for a follow-up fix.",
+      "evidence": "services.yaml web service: `start: PORTLESS_APP_PORT=4310 portless web.platform ... --port 4310` — uses the same anti-pattern that caused Storybook 502s. portless.md now explicitly documents that PORTLESS_APP_PORT has no effect."
+    },
+    {
+      "area": "skills",
+      "observation": "The storybook-worker SKILL.md was updated with step 7 mentioning PORT handling — this is good and directly addresses the root cause. The worker followed the procedure and the skill update is appropriate. The skill's suggested change in the handoff (mentioning PORT in the skill) has already been applied.",
+      "evidence": "SKILL.md step 7: 'Portless assigns the child app port via PORT; any Storybook dev script or wrapper must respect that env var instead of hardcoding a conflicting port.'"
+    },
+    {
+      "area": "conventions",
+      "observation": "The mission AGENTS.md lists 'Storybook underlying port: 4311' under reserved ports, but after this fix the actual port is dynamic. The port 4311 is only the default fallback. This could mislead future workers into assuming port 4311 is always used.",
+      "evidence": "Mission AGENTS.md: 'Storybook underlying port: 4311' — but apps/storybook/package.json now uses --port ${PORT:-4311}, making 4311 only the fallback when PORT is unset (i.e., running without Portless)."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The fix correctly identifies and resolves the root cause of transient 502 errors: Portless assigns dynamic ports via PORT env var but Storybook was ignoring it. The three-part fix (package.json respects PORT, startup wrapper polls Portless URL for readiness, services.yaml/portless.md updated) is well-implemented and verified. Two non-blocking issues noted: fragile PID parsing in the stop command and a potentially misleading static port field. Three shared state observations: the web service has the same PORT mismatch (out-of-scope, needs follow-up), the skill was properly updated, and the mission AGENTS.md port listing is now slightly inaccurate since ports are dynamic."
+}

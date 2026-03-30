@@ -1,0 +1,29 @@
+{
+  "name": "@platform/backend",
+  "version": "0.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "analyze": "tsc --noEmit --emitDeclarationOnly false",
+    "build": "tsc --noEmit --emitDeclarationOnly false",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "dev": "bunx convex dev",
+    "dev:setup": "bunx convex dev --configure --until-success",
+    "deploy": "bunx convex deploy",
+    "codegen": "bunx convex codegen --init"
+  },
+  "dependencies": {
+    "@t3-oss/env-nextjs": "^0.13.10",
+    "convex": "^1.33.1",
+    "dotenv": "^17.3.1",
+    "react": "19.2.4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@platform/typescript-config": "workspace:*",
+    "@types/node": "25.3.5",
+    "@types/react": "19.2.14",
+    "typescript": "^5.9.3"
+  }
+}
